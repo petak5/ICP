@@ -2,6 +2,7 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
+#include <QTreeWidgetItem>
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
@@ -30,5 +31,9 @@ private slots:
 
 private:
     Ui::MainWindow *ui;
+
+    QTreeWidgetItem * treeViewAddRootItem(QString name);
+
+    QTreeWidgetItem * treeViewAddItem(QTreeWidgetItem *parent, QString name);
 };
 #endif // MAINWINDOW_H

@@ -6,6 +6,15 @@ MainWindow::MainWindow(QWidget *parent)
     , ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
+
+    // Populate the tree with some dummies
+    auto root_1 = treeViewAddRootItem("Root item 1");
+    treeViewAddItem(root_1, "Child 1");
+    treeViewAddItem(root_1, "Child 2");
+
+    auto root_2 = treeViewAddRootItem("Root item 2");
+    auto child = treeViewAddItem(root_2, "Child 3");
+    treeViewAddItem(child, "Item 4");
 }
 
 MainWindow::~MainWindow()
@@ -17,6 +26,37 @@ MainWindow::~MainWindow()
 // -------- //
 // Tree tab //
 // -------- //
+
+/**
+ * @brief Add root item to tree
+ * @param title of the item
+ * @return Root item that was created and added to the QTreeWidget
+ */
+QTreeWidgetItem * MainWindow::treeViewAddRootItem(QString title)
+{
+    auto rootItem = new QTreeWidgetItem(ui->treeWidget);
+    rootItem->setText(0, title);
+    //ui->treeWidget->addTopLevelItem(rootItem);
+
+    return rootItem;
+}
+
+
+/**
+ * @brief Add item to the parent
+ * @param parent to add item to
+ * @param title of the item
+ * @return The item that was created and added to the parent
+ */
+QTreeWidgetItem * MainWindow::treeViewAddItem(QTreeWidgetItem *parent, QString title)
+{
+    auto childItem = new QTreeWidgetItem(parent);
+    childItem->setText(0, title);
+    //parent->addChild(childItem);
+
+    return childItem;
+}
+
 
 /**
  * @brief Subscibe to a topic
