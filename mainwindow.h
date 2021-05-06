@@ -26,6 +26,8 @@ private slots:
 
     void on_publishFileButton_clicked();
 
+    void on_connectToServerButton_clicked();
+
 private:
     Ui::MainWindow *ui;
 };

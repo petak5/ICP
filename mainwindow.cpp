@@ -14,6 +14,10 @@ MainWindow::~MainWindow()
 }
 
 
+// -------- //
+// Tree tab //
+// -------- //
+
 /**
  * @brief Subscibe to a topic
  */
@@ -71,5 +75,24 @@ void MainWindow::on_publishFileButton_clicked()
 
     // auto content = readFile(filePath);
     // model.publishMessage(topic, message);
+}
+
+// ------------ //
+// Settings tab //
+// ------------ //
+
+/**
+ * @brief Connect to server (MQTT broker)
+ */
+void MainWindow::on_connectToServerButton_clicked()
+{
+    auto address = ui->AddressTextField->text();
+    auto port = ui->PortTextField->text();
+    auto username = ui->UsernameTextField->text();
+    auto password = ui->passwordTextField->text();
+
+    if (address.isEmpty() || port.isEmpty()) return;
+
+    // model.connectToServer(address, port, username, password);
 }
 
