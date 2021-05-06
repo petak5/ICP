@@ -29,6 +29,8 @@ private slots:
 
     void on_connectToServerButton_clicked();
 
+    void on_valueHistoryList_itemSelectionChanged();
+
 private:
     Ui::MainWindow *ui;
 

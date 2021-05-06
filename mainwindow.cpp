@@ -15,6 +15,9 @@ MainWindow::MainWindow(QWidget *parent)
     auto root_2 = treeViewAddRootItem("Root item 2");
     auto child = treeViewAddItem(root_2, "Child 3");
     treeViewAddItem(child, "Item 4");
+
+    ui->valueHistoryList->addItem("Value 1");
+    ui->valueHistoryList->addItem("Value 2");
 }
 
 MainWindow::~MainWindow()
@@ -86,6 +89,16 @@ void MainWindow::on_subscribeResetButton_clicked()
 void MainWindow::on_valueInspectButton_clicked()
 {
     // OpenModal(with value of the message);
+}
+
+
+/**
+ * @brief Update displayed value when item from history is selected
+ */
+void MainWindow::on_valueHistoryList_itemSelectionChanged()
+{
+    auto item = ui->valueHistoryList->currentItem();
+    ui->valueTextField->setText(item->text());
 }
 
 
