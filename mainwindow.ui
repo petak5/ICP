@@ -58,35 +58,35 @@
        <item>
         <layout class="QVBoxLayout" name="verticalLayout">
          <item>
-          <widget class="QLabel" name="label">
+          <widget class="QLabel" name="subscribeToTopicLabel">
            <property name="text">
             <string>Subscribe to topic</string>
            </property>
           </widget>
          </item>
          <item>
-          <widget class="QLineEdit" name="lineEdit_2">
+          <widget class="QLineEdit" name="subscribeTopicTextField">
            <property name="placeholderText">
             <string>Topic</string>
            </property>
           </widget>
          </item>
          <item>
-          <widget class="QPushButton" name="pushButton">
+          <widget class="QPushButton" name="subscribeButton">
            <property name="text">
             <string>Subscribe</string>
            </property>
           </widget>
          </item>
          <item>
-          <widget class="QPushButton" name="pushButton_3">
+          <widget class="QPushButton" name="subscribeResetButton">
            <property name="text">
             <string>Reset</string>
            </property>
           </widget>
          </item>
          <item>
-          <spacer name="verticalSpacer">
+          <spacer name="verticalSpacer_1">
            <property name="orientation">
             <enum>Qt::Vertical</enum>
            </property>
@@ -99,7 +99,7 @@
           </spacer>
          </item>
          <item>
-          <widget class="Line" name="line">
+          <widget class="Line" name="line_1">
            <property name="orientation">
             <enum>Qt::Horizontal</enum>
            </property>
@@ -119,14 +119,14 @@
           </spacer>
          </item>
          <item>
-          <widget class="QLabel" name="label_2">
+          <widget class="QLabel" name="valueLabel">
            <property name="text">
             <string>Value</string>
            </property>
           </widget>
          </item>
          <item>
-          <widget class="QLineEdit" name="lineEdit_3">
+          <widget class="QLineEdit" name="valueTextField">
            <property name="text">
             <string>Test text.</string>
            </property>
@@ -136,14 +136,14 @@
           </widget>
          </item>
          <item>
-          <widget class="QPushButton" name="pushButton_2">
+          <widget class="QPushButton" name="valueInspectButton">
            <property name="text">
             <string>Inspect value</string>
            </property>
           </widget>
          </item>
          <item>
-          <spacer name="verticalSpacer_4">
+          <spacer name="verticalSpacer_3">
            <property name="orientation">
             <enum>Qt::Vertical</enum>
            </property>
@@ -163,7 +163,7 @@
           </widget>
          </item>
          <item>
-          <spacer name="verticalSpacer_3">
+          <spacer name="verticalSpacer_4">
            <property name="orientation">
             <enum>Qt::Vertical</enum>
            </property>
@@ -176,49 +176,49 @@
           </spacer>
          </item>
          <item>
-          <widget class="QLabel" name="label_3">
+          <widget class="QLabel" name="publishMessageLabel">
            <property name="text">
             <string>Publish message</string>
            </property>
           </widget>
          </item>
          <item>
-          <widget class="QLineEdit" name="lineEdit">
+          <widget class="QLineEdit" name="publishTopicTextField">
            <property name="placeholderText">
             <string>Topic</string>
            </property>
           </widget>
          </item>
          <item>
-          <widget class="QLabel" name="label_4">
+          <widget class="QLabel" name="textMessageLabel">
            <property name="text">
             <string>Text message</string>
            </property>
           </widget>
          </item>
          <item>
-          <widget class="QLineEdit" name="lineEdit_4">
+          <widget class="QLineEdit" name="publishTextMessageTextField">
            <property name="placeholderText">
             <string>Text</string>
            </property>
           </widget>
          </item>
          <item>
-          <widget class="QPushButton" name="pushButton_4">
+          <widget class="QPushButton" name="publishTextButton">
            <property name="text">
             <string>Publish text</string>
            </property>
           </widget>
          </item>
          <item>
-          <widget class="QLabel" name="label_5">
+          <widget class="QLabel" name="fileMessageLabel">
            <property name="text">
             <string>File message</string>
            </property>
           </widget>
          </item>
          <item>
-          <widget class="QLineEdit" name="lineEdit_5">
+          <widget class="QLineEdit" name="publishFilePathTextField">
            <property name="placeholderText">
             <string>Path to file</string>
            </property>
@@ -228,7 +228,7 @@
           </widget>
          </item>
          <item>
-          <widget class="QPushButton" name="pushButton_5">
+          <widget class="QPushButton" name="publishFileButton">
            <property name="text">
             <string>Publish file</string>
            </property>
