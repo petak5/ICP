@@ -178,7 +178,7 @@
          <item>
           <widget class="QLabel" name="label_3">
            <property name="text">
-            <string>Publish message to topic</string>
+            <string>Publish message</string>
            </property>
           </widget>
          </item>
@@ -199,7 +199,7 @@
          <item>
           <widget class="QLineEdit" name="lineEdit_4">
            <property name="placeholderText">
-            <string>Message</string>
+            <string>Text</string>
            </property>
           </widget>
          </item>
