@@ -15,6 +15,17 @@ public:
     MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
 
+private slots:
+    void on_subscribeButton_clicked();
+
+    void on_subscribeResetButton_clicked();
+
+    void on_valueInspectButton_clicked();
+
+    void on_publishTextButton_clicked();
+
+    void on_publishFileButton_clicked();
+
 private:
     Ui::MainWindow *ui;
 };
