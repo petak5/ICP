@@ -15,9 +15,6 @@ MainWindow::MainWindow(QWidget *parent)
     auto root_2 = treeViewAddRootItem("Root item 2");
     auto child = treeViewAddItem(root_2, "Child 3");
     treeViewAddItem(child, "Item 4");
-
-    ui->valueHistoryList->addItem("Value 1");
-    ui->valueHistoryList->addItem("Value 2");
 }
 
 MainWindow::~MainWindow()
@@ -58,6 +55,27 @@ QTreeWidgetItem * MainWindow::treeViewAddItem(QTreeWidgetItem *parent, QString t
     //parent->addChild(childItem);
 
     return childItem;
+}
+
+
+void MainWindow::on_treeWidget_itemSelectionChanged()
+{
+    auto treeItem = ui->treeWidget->currentItem();
+
+    // auto path = treeItemGetPath()
+    // auto values = model.getValueHistory(path)
+
+    auto values = QStringList();
+    values << treeItem->text(0) << "Another value";
+
+    ui->valueHistoryList->clear();
+    ui->valueHistoryList->addItems(values);
+
+    // Select the first item
+    ui->valueHistoryList->clearSelection();
+    auto firstItem = ui->valueHistoryList->item(0);
+    if (firstItem != nullptr)
+        ui->valueHistoryList->setCurrentItem(firstItem);
 }
 
 

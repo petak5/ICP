@@ -31,6 +31,8 @@ private slots:
 
     void on_valueHistoryList_itemSelectionChanged();
 
+    void on_treeWidget_itemSelectionChanged();
+
 private:
     Ui::MainWindow *ui;
 

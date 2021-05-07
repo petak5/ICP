@@ -127,7 +127,7 @@
             <item>
              <widget class="QLineEdit" name="valueTextField">
               <property name="text">
-               <string>Test text.</string>
+               <string/>
               </property>
               <property name="readOnly">
                <bool>true</bool>
