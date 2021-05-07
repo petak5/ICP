@@ -90,7 +90,7 @@ void MainWindow::on_subscribeButton_clicked()
 
     if (topic.isEmpty()) return;
 
-    // model.setTopic(topic);
+    mqttHandler->subscribe(topic);
 }
 
 
@@ -167,6 +167,7 @@ void MainWindow::on_connectToServerButton_clicked()
     if (mqttHandler->isConnected())
     {
         mqttHandler->disconnect();
+        ui->connectToServerButton->setText("Connect");
     }
     else
     {
@@ -177,14 +178,17 @@ void MainWindow::on_connectToServerButton_clicked()
 
         if (address.isEmpty() || port.isEmpty()) return;
 
+        bool success = false;
         if (username.isEmpty())
         {
-            mqttHandler->connect(address, port);
+            success = mqttHandler->connect(address, port);
         }
         else
         {
-            mqttHandler->connect(address, port, username, password);
+            success = mqttHandler->connect(address, port, username, password);
         }
+
+        if (success) ui->connectToServerButton->setText("Disconnect");
     }
 }
 

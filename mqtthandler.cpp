@@ -64,3 +64,29 @@ void MqttHandler::publishFile(QString topic, QString filePath)
     // TODO
     return;
 }
+
+
+void MqttHandler::subscribe(QString topic)
+{
+    try {
+        client->subscribe(topic.toStdString());
+
+        isSubscribed = true;
+
+        while(isSubscribed)
+        {
+            auto message = client->consume_message();
+
+            if (message->get_topic() == topic.toStdString().c_str())
+            {
+                if (message->to_string() == "exit") isSubscribed = false;
+            }
+        }
+
+        client->unsubscribe(topic.toStdString());
+    }
+    catch (const mqtt::exception& exc) {
+        std::cerr << "Error: " << exc.what() << std::endl;
+    }
+}
+
