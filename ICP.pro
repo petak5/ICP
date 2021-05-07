@@ -11,13 +11,16 @@ LIBS += -lpaho-mqtt3c -lpaho-mqtt3a -lpaho-mqttpp3
 
 SOURCES += \
     main.cpp \
-    mainwindow.cpp
+    mainwindow.cpp \
+    valueinspectdialog.cpp
 
 HEADERS += \
-    mainwindow.h
+    mainwindow.h \
+    valueinspectdialog.h
 
 FORMS += \
-    mainwindow.ui
+    mainwindow.ui \
+    valueinspectdialog.ui
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin

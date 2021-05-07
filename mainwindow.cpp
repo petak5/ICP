@@ -106,7 +106,12 @@ void MainWindow::on_subscribeResetButton_clicked()
  */
 void MainWindow::on_valueInspectButton_clicked()
 {
-    // OpenModal(with value of the message);
+    auto message = ui->valueTextField->text();
+    if (message.isEmpty()) return;
+
+    auto dialog = new ValueInspectDialog(this);
+    dialog->setMessage(message);
+    dialog->exec();
 }
 
 
