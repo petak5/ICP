@@ -109,7 +109,7 @@ void MainWindow::on_valueInspectButton_clicked()
     auto message = ui->valueTextField->text();
     if (message.isEmpty()) return;
 
-    auto dialog = new ValueInspectDialog(this);
+    auto dialog = new ValueInspectDialog();
     dialog->setMessage(message);
     dialog->exec();
 }
