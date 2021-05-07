@@ -12,10 +12,12 @@ LIBS += -lpaho-mqtt3c -lpaho-mqtt3a -lpaho-mqttpp3
 SOURCES += \
     main.cpp \
     mainwindow.cpp \
+    mqtthandler.cpp \
     valueinspectdialog.cpp
 
 HEADERS += \
     mainwindow.h \
+    mqtthandler.h \
     valueinspectdialog.h
 
 FORMS += \

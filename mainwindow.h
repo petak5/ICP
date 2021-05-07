@@ -4,6 +4,7 @@
 #include <QMainWindow>
 #include <QTreeWidgetItem>
 #include "valueinspectdialog.h"
+#include "mqtthandler.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
@@ -36,6 +37,8 @@ private slots:
 
 private:
     Ui::MainWindow *ui;
+
+    MqttHandler *mqttHandler;
 
     QTreeWidgetItem * treeViewAddRootItem(QString name);
 

@@ -7,6 +7,8 @@ MainWindow::MainWindow(QWidget *parent)
 {
     ui->setupUi(this);
 
+    mqttHandler = new MqttHandler();
+
     // Populate the tree with some dummies
     auto root_1 = treeViewAddRootItem("Root item 1");
     treeViewAddItem(root_1, "Child 1");
@@ -135,7 +137,7 @@ void MainWindow::on_publishTextButton_clicked()
 
     if (topic.isEmpty() || message.isEmpty()) return;
 
-    // model.publishMessage(topic, message);
+    mqttHandler->publishMessage(topic, message);
 }
 
 
@@ -158,17 +160,31 @@ void MainWindow::on_publishFileButton_clicked()
 // ------------ //
 
 /**
- * @brief Connect to server (MQTT broker)
+ * @brief Connect to or disconnect from server (MQTT broker)
  */
 void MainWindow::on_connectToServerButton_clicked()
 {
-    auto address = ui->AddressTextField->text();
-    auto port = ui->PortTextField->text();
-    auto username = ui->UsernameTextField->text();
-    auto password = ui->passwordTextField->text();
+    if (mqttHandler->isConnected())
+    {
+        mqttHandler->disconnect();
+    }
+    else
+    {
+        auto address = ui->AddressTextField->text();
+        auto port = ui->PortTextField->text();
+        auto username = ui->UsernameTextField->text();
+        auto password = ui->passwordTextField->text();
 
-    if (address.isEmpty() || port.isEmpty()) return;
+        if (address.isEmpty() || port.isEmpty()) return;
 
-    // model.connectToServer(address, port, username, password);
+        if (username.isEmpty())
+        {
+            mqttHandler->connect(address, port);
+        }
+        else
+        {
+            mqttHandler->connect(address, port, username, password);
+        }
+    }
 }
 
