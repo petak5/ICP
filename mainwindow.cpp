@@ -1,24 +1,50 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 
+
 Topic::Topic(QString topic) : topic(topic) {}
 
 
+/**
+ * @brief Get topic name
+ * @return topic name
+ */
 QString Topic::getTopic() { return topic; }
 
 
+/**
+ * @brief Add message to topic
+ * @param message to add
+ */
 void Topic::addMessage(QString message) { messages.append(new QString(message)); }
 
 
+/**
+ * @brief Get all messages
+ * @return list of messages
+ */
 QList<QString *> &Topic::getMessages() { return messages; };
 
 
+/**
+ * @brief Add topic to children
+ * @param topic to add
+ */
 void Topic::addChild(Topic *topic) { children.append(topic); }
 
 
+/**
+ * @brief Get all children
+ * @return list of children
+ */
 QList<Topic *> &Topic::getChildren() { return children; }
 
 
+/**
+ * @brief Find topic in the topics tree at the specified path
+ * @param path is path to the topic in the tree
+ * @return topic at specified path or nullptr if not found
+ */
 Topic * Topic::findTopic(QStringList path)
 {
     if (path.length() == 0) return nullptr;
@@ -46,6 +72,11 @@ Topic * Topic::findTopic(QStringList path)
 }
 
 
+/**
+ * @brief Add topic to tree, the location is determined by the topic attribute which is used as path in the tree
+ * @param topic to add to topic's tree structure
+ * @return the topic that was added to the tree
+ */
 Topic * Topic::addTopic(Topic *topic)
 {
     auto path = topic->topic.split("/");
@@ -78,9 +109,6 @@ Topic * Topic::addTopic(Topic *topic)
 }
 
 
-
-
-
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow), topicsTree()
@@ -94,6 +122,11 @@ MainWindow::~MainWindow()
 }
 
 
+/**
+ * @brief Function that is called when new message is received in the Paho client callback, updates UI with the new message
+ * @param topic is the topic of the message
+ * @param message is the message's conetnt (payload)
+ */
 void MainWindow::newMessage(QString topic, QString message)
 {
     auto topicPath = topic.split(QString("/"));
@@ -198,6 +231,9 @@ QTreeWidgetItem * MainWindow::treeViewAddItem(QTreeWidgetItem *parent, QString t
 }
 
 
+/**
+ * @brief Fills value history list with values related to the currently selected item in tree widget
+ */
 void MainWindow::refreshValuesList()
 {
     ui->valueHistoryList->clear();

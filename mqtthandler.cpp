@@ -61,16 +61,6 @@ callback::callback(mqtt::async_client& cli, mqtt::connect_options& connOpts, Mai
 /////////////////////////////////////////////////////////////////////////////
 
 
-
-
-
-
-
-
-
-
-
-
 MqttHandler::MqttHandler(QString address, QString port, MainWindow *mainWindow)
     : client(address.append(":").append(port).toStdString(), "ICP_project"), cb(client, connOpts, mainWindow)
 {
