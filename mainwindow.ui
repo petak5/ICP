@@ -66,6 +66,9 @@
             </item>
             <item>
              <widget class="QPushButton" name="subscribeButton">
+              <property name="enabled">
+               <bool>false</bool>
+              </property>
               <property name="text">
                <string>Subscribe</string>
               </property>
@@ -73,6 +76,9 @@
             </item>
             <item>
              <widget class="QPushButton" name="subscribeResetButton">
+              <property name="enabled">
+               <bool>false</bool>
+              </property>
               <property name="text">
                <string>Reset</string>
               </property>
@@ -236,6 +242,9 @@
             </item>
             <item>
              <widget class="QPushButton" name="publishTextButton">
+              <property name="enabled">
+               <bool>false</bool>
+              </property>
               <property name="text">
                <string>Publish text</string>
               </property>
@@ -260,6 +269,9 @@
             </item>
             <item>
              <widget class="QPushButton" name="publishFileButton">
+              <property name="enabled">
+               <bool>false</bool>
+              </property>
               <property name="text">
                <string>Publish file</string>
               </property>

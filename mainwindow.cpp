@@ -366,9 +366,6 @@ void MainWindow::on_publishFileButton_clicked()
     std::string content((std::istreambuf_iterator<char>(ifs)), (std::istreambuf_iterator<char>()));
 
     mqttHandler->publishMessage(topic, content.c_str());
-
-    // auto content = readFile(filePath);
-    // model.publishMessage(topic, message);
 }
 
 // ------------ //
@@ -391,13 +388,27 @@ void MainWindow::on_connectToServerButton_clicked()
 
         mqttHandler = new MqttHandler(address, port, this);
 
-        if (mqttHandler != nullptr) ui->connectToServerButton->setText("Disconnect");
+        if (mqttHandler != nullptr)
+        {
+            ui->connectToServerButton->setText("Disconnect");
+
+            ui->subscribeButton->setEnabled(true);
+            ui->subscribeResetButton->setEnabled(true);
+            ui->publishTextButton->setEnabled(true);
+            ui->publishFileButton->setEnabled(true);
+        }
     }
     else
     {
         delete mqttHandler;
         mqttHandler = nullptr;
+
         ui->connectToServerButton->setText("Connect");
+
+        ui->subscribeButton->setEnabled(false);
+        ui->subscribeResetButton->setEnabled(false);
+        ui->publishTextButton->setEnabled(false);
+        ui->publishFileButton->setEnabled(false);
     }
 }
 
