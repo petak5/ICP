@@ -1,9 +1,89 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 
+Topic::Topic(QString topic) : topic(topic) {}
+
+
+QString Topic::getTopic() { return topic; }
+
+
+void Topic::addMessage(QString message) { messages.append(new QString(message)); }
+
+
+QList<QString *> &Topic::getMessages() { return messages; };
+
+
+void Topic::addChild(Topic *topic) { children.append(topic); }
+
+
+QList<Topic *> &Topic::getChildren() { return children; }
+
+
+Topic * Topic::findTopic(QStringList path)
+{
+    if (path.length() == 0) return nullptr;
+
+    // Last element of path
+    if (path.length() == 1)
+    {
+        if (path[0] == this->topic)
+            return this;
+    }
+
+    if (path[0] != this->topic)
+        return nullptr;
+
+    path.removeFirst();
+    for (int i = 0; i < children.length(); i++)
+    {
+        auto topic = children.at(i)->findTopic(path);
+
+        if (topic != nullptr)
+            return topic;
+    }
+
+    return nullptr;
+}
+
+
+Topic * Topic::addTopic(Topic *topic)
+{
+    auto path = topic->topic.split("/");
+
+    path.removeFirst();
+
+    auto currentNode = this;
+    for (int i = 0; i < path.length(); i++)
+    {
+        bool found = false;
+        for (int j = 0; j < currentNode->children.length(); j++)
+        {
+            if (currentNode->children.at(j)->topic == path[i])
+            {
+                found = true;
+                currentNode = currentNode->children.at(j);
+                break;
+            }
+        }
+
+        if (!found)
+        {
+            auto temp = new Topic(path[i]);
+            currentNode->addChild(temp);
+            currentNode = temp;
+        }
+    }
+
+    return currentNode;
+}
+
+
+
+
+
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
-    , ui(new Ui::MainWindow)
+    , ui(new Ui::MainWindow), topicsTree()
 {
     ui->setupUi(this);
 
@@ -25,7 +105,68 @@ MainWindow::~MainWindow()
 
 void MainWindow::newMessage(QString topic, QString message)
 {
-    treeViewAddRootItem(topic);
+    auto topicPath = topic.split(QString("/"));
+
+    int topicsRowIndex = -1;
+    for (int i = 0; i < topicsTree.length(); i++)
+    {
+        if (topicsTree.at(i)->getTopic() == topicPath[0])
+        {
+            topicsRowIndex = i;
+            break;
+        }
+    }
+
+    // Topics branch not found in the tree
+    if (topicsRowIndex == -1)
+    {
+        topicsTree.append(new Topic(topicPath[0]));
+        topicsRowIndex = topicsTree.length() - 1;
+    }
+
+    auto row = topicsTree.at(topicsRowIndex);
+    //topicPath.removeFirst();
+    auto topicObject = row->findTopic(topicPath);
+
+    if (topicObject == nullptr)
+    {
+        // Add topic to backend model
+        topicObject = row->addTopic(new Topic(topic));
+    }
+
+    topicObject->addMessage(message);
+
+    // Append topics/subtopics to UI tree
+    if (topicPath.length() > 0)
+    {
+        auto foundItems = ui->treeWidget->findItems(topicPath[0], Qt::MatchExactly);
+
+        QTreeWidgetItem *currentItem = nullptr;
+        if (foundItems.empty())
+            currentItem = treeViewAddRootItem(topicPath[0]);
+        else
+            currentItem = foundItems.first();
+
+        topicPath.removeFirst();
+        for (int i = 0; i < topicPath.length(); i ++)
+        {
+            bool found = false;
+            for (int j = 0; j < currentItem->childCount(); j++)
+            {
+                if (currentItem->child(j)->text(0) == topicPath[i])
+                {
+                    found = true;
+                    currentItem = currentItem->child(j);
+                    break;
+                }
+            }
+
+            if (!found)
+            {
+                currentItem = treeViewAddItem(currentItem, topicPath[i]);
+            }
+        }
+    }
 }
 
 
