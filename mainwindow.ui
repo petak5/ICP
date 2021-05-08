@@ -322,6 +322,9 @@
             </item>
             <item>
              <widget class="QLineEdit" name="AddressTextField">
+              <property name="text">
+               <string>localhost</string>
+              </property>
               <property name="placeholderText">
                <string>Address</string>
               </property>
@@ -346,6 +349,9 @@
             </item>
             <item>
              <widget class="QLineEdit" name="PortTextField">
+              <property name="text">
+               <string>1883</string>
+              </property>
               <property name="placeholderText">
                <string>Port</string>
               </property>
