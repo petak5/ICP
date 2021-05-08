@@ -1,6 +1,6 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
-
+#include <fstream>
 
 Topic::Topic(QString topic) : topic(topic) {}
 
@@ -237,6 +237,7 @@ QTreeWidgetItem * MainWindow::treeViewAddItem(QTreeWidgetItem *parent, QString t
 void MainWindow::refreshValuesList()
 {
     ui->valueHistoryList->clear();
+    ui->valueTextField->clear();
 
     // Get path from tree
     auto currentItem = ui->treeWidget->currentItem();
@@ -360,6 +361,11 @@ void MainWindow::on_publishFileButton_clicked()
     auto filePath = ui->publishFilePathTextField->text();
 
     if (topic.isEmpty() || filePath.isEmpty()) return;
+
+    std::ifstream ifs(filePath.toStdString());
+    std::string content((std::istreambuf_iterator<char>(ifs)), (std::istreambuf_iterator<char>()));
+
+    mqttHandler->publishMessage(topic, content.c_str());
 
     // auto content = readFile(filePath);
     // model.publishMessage(topic, message);
