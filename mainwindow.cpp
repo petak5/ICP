@@ -23,6 +23,12 @@ MainWindow::~MainWindow()
 }
 
 
+void MainWindow::newMessage(QString topic, QString message)
+{
+    treeViewAddRootItem(topic);
+}
+
+
 // -------- //
 // Tree tab //
 // -------- //
@@ -171,7 +177,7 @@ void MainWindow::on_connectToServerButton_clicked()
 
         if (address.isEmpty() || port.isEmpty()) return;
 
-        mqttHandler = new MqttHandler(address, port);
+        mqttHandler = new MqttHandler(address, port, this);
 
         if (mqttHandler != nullptr) ui->connectToServerButton->setText("Disconnect");
     }

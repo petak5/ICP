@@ -18,6 +18,8 @@ public:
     MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
 
+    void newMessage(QString topic, QString message);
+
 private slots:
     void on_subscribeButton_clicked();
 
@@ -37,11 +39,9 @@ private slots:
 
 private:
     Ui::MainWindow *ui;
-
     MqttHandler *mqttHandler = nullptr;
 
     QTreeWidgetItem * treeViewAddRootItem(QString name);
-
     QTreeWidgetItem * treeViewAddItem(QTreeWidgetItem *parent, QString name);
 };
 #endif // MAINWINDOW_H

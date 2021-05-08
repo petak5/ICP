@@ -1,6 +1,6 @@
 #include "mqtthandler.h"
 #include <string>
-
+#include "mainwindow.h"
 
 // Part of the code in this file was inspired by the official Paho library example:
 // https://github.com/eclipse/paho.mqtt.cpp/blob/master/src/samples/async_subscribe.cpp
@@ -48,16 +48,15 @@ void callback::connection_lost(const std::string& cause)
 
 void callback::message_arrived(mqtt::const_message_ptr msg)
 {
-    std::cout << "Message arrived" << std::endl;
-    std::cout << "\ttopic: '" << msg->get_topic() << "'" << std::endl;
-    std::cout << "\tpayload: '" << msg->to_string() << "'\n" << std::endl;
+    mainWindow->newMessage(QString().fromStdString(msg->get_topic()), QString().fromStdString(msg->to_string()));
 }
+
 
 void callback::delivery_complete(mqtt::delivery_token_ptr token) {}
 
 
-callback::callback(mqtt::async_client& cli, mqtt::connect_options& connOpts)
-            : nretry_(0), client(cli), connectOptions(connOpts) {}
+callback::callback(mqtt::async_client& cli, mqtt::connect_options& connOpts, MainWindow *mainWindow)
+            : nretry_(0), client(cli), connectOptions(connOpts), mainWindow(mainWindow) {}
 
 /////////////////////////////////////////////////////////////////////////////
 
@@ -72,8 +71,8 @@ callback::callback(mqtt::async_client& cli, mqtt::connect_options& connOpts)
 
 
 
-MqttHandler::MqttHandler(QString address, QString port)
-    : client(address.append(":").append(port).toStdString(), "ICP_project"), cb(client, connOpts)
+MqttHandler::MqttHandler(QString address, QString port, MainWindow *mainWindow)
+    : client(address.append(":").append(port).toStdString(), "ICP_project"), cb(client, connOpts, mainWindow)
 {
     client.set_callback(cb);
 
