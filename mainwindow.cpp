@@ -7,8 +7,6 @@ MainWindow::MainWindow(QWidget *parent)
 {
     ui->setupUi(this);
 
-    mqttHandler = new MqttHandler();
-
     // Populate the tree with some dummies
     auto root_1 = treeViewAddRootItem("Root item 1");
     treeViewAddItem(root_1, "Child 1");
@@ -164,12 +162,7 @@ void MainWindow::on_publishFileButton_clicked()
  */
 void MainWindow::on_connectToServerButton_clicked()
 {
-    if (mqttHandler->isConnected())
-    {
-        mqttHandler->disconnect();
-        ui->connectToServerButton->setText("Connect");
-    }
-    else
+    if (mqttHandler == nullptr)
     {
         auto address = ui->AddressTextField->text();
         auto port = ui->PortTextField->text();
@@ -178,17 +171,15 @@ void MainWindow::on_connectToServerButton_clicked()
 
         if (address.isEmpty() || port.isEmpty()) return;
 
-        bool success = false;
-        if (username.isEmpty())
-        {
-            success = mqttHandler->connect(address, port);
-        }
-        else
-        {
-            success = mqttHandler->connect(address, port, username, password);
-        }
+        mqttHandler = new MqttHandler(address, port);
 
-        if (success) ui->connectToServerButton->setText("Disconnect");
+        if (mqttHandler != nullptr) ui->connectToServerButton->setText("Disconnect");
+    }
+    else
+    {
+        delete mqttHandler;
+        mqttHandler = nullptr;
+        ui->connectToServerButton->setText("Connect");
     }
 }
 

@@ -38,7 +38,7 @@ private slots:
 private:
     Ui::MainWindow *ui;
 
-    MqttHandler *mqttHandler;
+    MqttHandler *mqttHandler = nullptr;
 
     QTreeWidgetItem * treeViewAddRootItem(QString name);
 
