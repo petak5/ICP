@@ -86,15 +86,6 @@ MainWindow::MainWindow(QWidget *parent)
     , ui(new Ui::MainWindow), topicsTree()
 {
     ui->setupUi(this);
-
-    // Populate the tree with some dummies
-    auto root_1 = treeViewAddRootItem("Root item 1");
-    treeViewAddItem(root_1, "Child 1");
-    treeViewAddItem(root_1, "Child 2");
-
-    auto root_2 = treeViewAddRootItem("Root item 2");
-    auto child = treeViewAddItem(root_2, "Child 3");
-    treeViewAddItem(child, "Item 4");
 }
 
 MainWindow::~MainWindow()
@@ -166,6 +157,8 @@ void MainWindow::newMessage(QString topic, QString message)
                 currentItem = treeViewAddItem(currentItem, topicPath[i]);
             }
         }
+
+        refreshValuesList();
     }
 }
 
@@ -205,17 +198,47 @@ QTreeWidgetItem * MainWindow::treeViewAddItem(QTreeWidgetItem *parent, QString t
 }
 
 
-void MainWindow::on_treeWidget_itemSelectionChanged()
+void MainWindow::refreshValuesList()
 {
-    auto treeItem = ui->treeWidget->currentItem();
-
-    // auto path = treeItemGetPath()
-    // auto values = model.getValueHistory(path)
-
-    auto values = QStringList();
-    values << treeItem->text(0) << "Another value";
-
     ui->valueHistoryList->clear();
+
+    // Get path from tree
+    auto currentItem = ui->treeWidget->currentItem();
+    if (currentItem == nullptr)
+        return;
+    auto itemPath = QStringList(currentItem->text(0));
+
+    while (currentItem->parent() != NULL)
+    {
+        itemPath.prepend(currentItem->parent()->text(0));
+        currentItem = currentItem->parent();
+    }
+
+    Topic *rootTopic = nullptr;
+    for (int i = 0; i < topicsTree.length(); i++)
+    {
+        if (topicsTree.at(i)->getTopic() == itemPath[0])
+        {
+            rootTopic = topicsTree.at(i);
+            break;
+        }
+    }
+
+    if (rootTopic == nullptr)
+        return;
+
+
+    auto topic = rootTopic->findTopic(itemPath);
+    if (topic == nullptr)
+        return;
+
+    auto messages = topic->getMessages();
+    QStringList values;
+    for (int i = 0; i < messages.length(); i++)
+    {
+        values.append(messages.at(i)->toStdString().c_str());
+    }
+
     ui->valueHistoryList->addItems(values);
 
     // Select the first item
@@ -223,6 +246,12 @@ void MainWindow::on_treeWidget_itemSelectionChanged()
     auto firstItem = ui->valueHistoryList->item(0);
     if (firstItem != nullptr)
         ui->valueHistoryList->setCurrentItem(firstItem);
+}
+
+
+void MainWindow::on_treeWidget_itemSelectionChanged()
+{
+    refreshValuesList();
 }
 
 

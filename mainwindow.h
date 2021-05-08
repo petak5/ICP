@@ -63,7 +63,8 @@ private:
     QList<Topic *> topicsTree;
 
     QTreeWidgetItem * treeViewAddRootItem(QString name);
-    QTreeWidgetItem * treeViewAddItem(QTreeWidgetItem *parent, QString name);    
+    QTreeWidgetItem * treeViewAddItem(QTreeWidgetItem *parent, QString name);
+    void refreshValuesList();
 };
 
 #endif // MAINWINDOW_H
