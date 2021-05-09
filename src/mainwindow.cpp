@@ -10,7 +10,6 @@
 #include <fstream>
 #include <limits>
 #include <QFile>
-#include <QDir>
 #include <QMessageBox>
 
 Topic::Topic(QString topic) : topic(topic) {}
@@ -132,6 +131,33 @@ Topic * Topic::addTopic(Topic *topic)
 
     return currentNode;
 }
+
+
+void Topic::exportToDisk(QDir directory)
+{
+    if (!directory.exists())
+        directory.mkdir(directory.path());
+
+    QDir newDir(directory.path().append("/").append(topic));
+    if (!newDir.exists())
+        newDir.mkdir(newDir.path());
+
+    if (messages.length() > 0)
+    {
+        QFile payloadFile(newDir.path().append("/payload.txt"));
+        payloadFile.open(QIODevice::WriteOnly);
+        payloadFile.write(messages.last()->data(), messages.last()->length());
+        payloadFile.close();
+    }
+
+    for (int i = 0; i < children.length(); i++)
+    {
+        children.at(i)->exportToDisk(newDir);
+    }
+}
+
+
+// Main Window
 
 
 MainWindow::MainWindow(QWidget *parent)
@@ -537,6 +563,11 @@ void MainWindow::on_exportButton_clicked()
 
         dialog.exec();
         return;
+    }
+
+    for (int i = 0; i < topicsTree.length(); i++)
+    {
+        topicsTree.at(i)->exportToDisk(directory);
     }
 }
 

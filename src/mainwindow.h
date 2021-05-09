@@ -12,6 +12,7 @@
 #include <QTreeWidgetItem>
 #include "valueinspectdialog.h"
 #include "mqtthandler.h"
+#include <QDir>
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
@@ -27,6 +28,8 @@ public:
 
     Topic * findTopic(QStringList path);
     Topic * addTopic(Topic *topic);
+
+    void exportToDisk(QDir directory);
 
 private:
     QString topic;
