@@ -231,6 +231,10 @@ QTreeWidgetItem * MainWindow::treeViewAddItem(QTreeWidgetItem *parent, QString t
 }
 
 
+/**
+ * @brief Get path to currently selected item in tree view
+ * @return path to current item, empty path if not found
+ */
 QStringList MainWindow::treeViewGetPathToCurrentItem()
 {
     // Get path from tree
@@ -250,6 +254,11 @@ QStringList MainWindow::treeViewGetPathToCurrentItem()
 }
 
 
+/**
+ * @brief Find topic at the specified path in the topics tree structure
+ * @param path is the path to the requested topic
+ * @return topic at the path or nullptr if not found
+ */
 Topic *MainWindow::treeViewFindTopic(QStringList path)
 {
     Topic *rootTopic = nullptr;
@@ -304,6 +313,9 @@ void MainWindow::refreshValuesList()
 }
 
 
+/**
+ * @brief Update list when tree view selection changed
+ */
 void MainWindow::on_treeWidget_itemSelectionChanged()
 {
     refreshValuesList();
@@ -337,11 +349,26 @@ void MainWindow::on_subscribeResetButton_clicked()
  */
 void MainWindow::on_valueInspectButton_clicked()
 {
-    auto message = ui->valueTextField->text();
-    if (message.isEmpty()) return;
+    auto selectedIndex = ui->valueHistoryList->currentIndex();
+
+    auto itemPath = treeViewGetPathToCurrentItem();
+    if (itemPath.empty())
+        return;
+
+    auto topic = treeViewFindTopic(itemPath);
+    if (topic == nullptr)
+        return;
+
+    auto messages = topic->getMessages();
+
+    // Some internal error probably
+    if (selectedIndex.row() >= messages.length())
+        return;
+
+    auto message = messages.at(selectedIndex.row());
 
     auto dialog = new ValueInspectDialog();
-    dialog->setMessage(message);
+    dialog->setMessage(*message);
     dialog->exec();
 }
 

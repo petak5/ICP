@@ -17,28 +17,22 @@ ValueInspectDialog::~ValueInspectDialog()
 
 
 /**
- * @brief Set message to be shown in the dialog
+ * @brief Set message to be shown in the dialog, try to parse it as an image too
  * @param message to show
  */
-void ValueInspectDialog::setMessage(QString message)
+void ValueInspectDialog::setMessage(std::string message)
 {
-    auto cppMessage = message.toStdString();
+    ui->plainTextEdit->setPlainText(QString::fromStdString(message));
+
     QPixmap pixmap;
-    QByteArray data(cppMessage.c_str(), cppMessage.length());
+    QByteArray data(message.data(), message.length());
 
     if (pixmap.loadFromData(data))
     {
         ui->image_label->setPixmap(pixmap);
+
+        // Focus second tab when data is identified as image
+        ui->tabWidget->setCurrentIndex(1);
     }
-
-    //ui->plainTextEdit->setPlainText(message);
-
-    //QImage image(data);
-    //image.save("/home/parallels/Desktop/facebook_copy.png");
-
-    //QByteArray byteArray(message.toStdString().c_str(), message.length());
-    //QPixmap picture(byteArray);
-
-    //ui->image_label->setPixmap(picture);
 }
 

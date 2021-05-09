@@ -14,7 +14,7 @@ class ValueInspectDialog : public QDialog
 public:
     explicit ValueInspectDialog(QWidget *parent = nullptr);
     ~ValueInspectDialog();
-    void setMessage(QString message);
+    void setMessage(std::string message);
 
 private:
     Ui::ValueInspectDialog *ui;
