@@ -68,6 +68,8 @@ private slots:
 
     void on_numberOfMessagesSetButton_clicked();
 
+    void on_exportButton_clicked();
+
 private:
     Ui::MainWindow *ui;
     MqttHandler *mqttHandler = nullptr;

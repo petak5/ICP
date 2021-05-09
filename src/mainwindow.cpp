@@ -9,6 +9,9 @@
 #include "ui_mainwindow.h"
 #include <fstream>
 #include <limits>
+#include <QFile>
+#include <QDir>
+#include <QMessageBox>
 
 Topic::Topic(QString topic) : topic(topic) {}
 
@@ -434,6 +437,19 @@ void MainWindow::on_publishFileButton_clicked()
 
     if (topic.isEmpty() || filePath.isEmpty()) return;
 
+    QFile file(filePath);
+    QFileInfo fileInfo(filePath);
+    if (!fileInfo.isFile())
+    {
+        QMessageBox dialog;
+        dialog.setWindowTitle("Invalid file name");
+        auto text = QString("File '").append(filePath).append("' either does not exist or is not a file. Please check if you've provided the correct path.");
+        dialog.setText(text);
+
+        dialog.exec();
+        return;
+    }
+
     std::ifstream ifs(filePath.toStdString());
     std::string content((std::istreambuf_iterator<char>(ifs)), (std::istreambuf_iterator<char>()));
 
@@ -501,5 +517,26 @@ void MainWindow::on_numberOfMessagesSetButton_clicked()
         numberOfMessagesInHistory = INT_MAX;
 
     refreshValuesList();
+}
+
+
+void MainWindow::on_exportButton_clicked()
+{
+    auto directoryPath = ui->exportPathTextField->text().trimmed();
+
+    if (directoryPath.isEmpty())
+        return;
+
+    auto directory = QDir(directoryPath);
+    if (!directory.isEmpty())
+    {
+        QMessageBox dialog;
+        dialog.setWindowTitle("Directory is not empty");
+        auto text = QString("Directory '").append(directory.path()).append("' is not empty. Please choose another path.");
+        dialog.setText(text);
+
+        dialog.exec();
+        return;
+    }
 }
 
