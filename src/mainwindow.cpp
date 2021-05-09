@@ -144,9 +144,25 @@ void Topic::exportToDisk(QDir directory)
 
     if (messages.length() > 0)
     {
-        QFile payloadFile(newDir.path().append("/payload.txt"));
+        auto lastMessage = messages.last();
+
+        auto payloadPath = newDir.path();
+
+        // Figure out file type, only PNG and JPG is supported, everything else is just data in TXT
+        QPixmap dummyPixmap;
+        QByteArray data(lastMessage->data(), lastMessage->length());
+
+        if (dummyPixmap.loadFromData(data, "PNG"))
+            payloadPath.append("/payload.png");
+        else if (dummyPixmap.loadFromData(data, "JPG"))
+            payloadPath.append("/payload.jpg");
+        else
+            payloadPath.append("/payload.txt");
+
+        // Write payload
+        QFile payloadFile(payloadPath);
         payloadFile.open(QIODevice::WriteOnly);
-        payloadFile.write(messages.last()->data(), messages.last()->length());
+        payloadFile.write(lastMessage->data(), lastMessage->length());
         payloadFile.close();
     }
 
