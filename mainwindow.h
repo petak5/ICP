@@ -15,8 +15,8 @@ class Topic
 public:
     Topic(QString topic);
     QString getTopic();
-    void addMessage(std::string message);
-    QList<std::string *> &getMessages();
+    void addMessage(std::string message, int maxCount);
+    QList<std::string *> &getMessages(int maxCount);
 
     Topic * findTopic(QStringList path);
     Topic * addTopic(Topic *topic);
@@ -57,10 +57,13 @@ private slots:
 
     void on_treeWidget_itemSelectionChanged();
 
+    void on_numberOfMessagesSetButton_clicked();
+
 private:
     Ui::MainWindow *ui;
     MqttHandler *mqttHandler = nullptr;
     QList<Topic *> topicsTree;
+    int numberOfMessagesInHistory = 1;
 
     QTreeWidgetItem * treeViewAddRootItem(QString name);
     QTreeWidgetItem * treeViewAddItem(QTreeWidgetItem *parent, QString name);

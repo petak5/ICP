@@ -1,6 +1,7 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 #include <fstream>
+#include <limits>
 
 Topic::Topic(QString topic) : topic(topic) {}
 
@@ -15,15 +16,29 @@ QString Topic::getTopic() { return topic; }
 /**
  * @brief Add message to topic
  * @param message to add
+ * @param maxCount of messages stored
  */
-void Topic::addMessage(std::string message) { messages.append(new std::string(message)); }
+void Topic::addMessage(std::string message, int maxCount)
+{
+    messages.append(new std::string(message));
+
+    if (messages.length() > maxCount)
+        messages.removeFirst();
+}
 
 
 /**
  * @brief Get all messages
+ * @param maxCount of mesages stored
  * @return list of messages
  */
-QList<std::string *> &Topic::getMessages() { return messages; };
+QList<std::string *> &Topic::getMessages(int maxCount)
+{
+    while (messages.length() > maxCount)
+        messages.removeFirst();
+
+    return messages;
+};
 
 
 /**
@@ -114,6 +129,8 @@ MainWindow::MainWindow(QWidget *parent)
     , ui(new Ui::MainWindow), topicsTree()
 {
     ui->setupUi(this);
+
+    ui->numberOfMessagesTextField->setValidator(new QIntValidator(0, 100, this));
 }
 
 MainWindow::~MainWindow()
@@ -158,7 +175,9 @@ void MainWindow::newMessage(QString topic, std::string payload)
         topicObject = row->addTopic(new Topic(topic));
     }
 
-    topicObject->addMessage(payload);
+    topicObject->addMessage(payload, numberOfMessagesInHistory);
+
+
 
     // Append topics/subtopics to UI tree
     if (topicPath.length() > 0)
@@ -296,7 +315,7 @@ void MainWindow::refreshValuesList()
     if (topic == nullptr)
         return;
 
-    auto messages = topic->getMessages();
+    auto messages = topic->getMessages(numberOfMessagesInHistory);
     QStringList values;
     for (int i = 0; i < messages.length(); i++)
     {
@@ -359,7 +378,7 @@ void MainWindow::on_valueInspectButton_clicked()
     if (topic == nullptr)
         return;
 
-    auto messages = topic->getMessages();
+    auto messages = topic->getMessages(numberOfMessagesInHistory);
 
     // Some internal error probably
     if (selectedIndex.row() >= messages.length())
@@ -458,5 +477,21 @@ void MainWindow::on_connectToServerButton_clicked()
         ui->publishTextButton->setEnabled(false);
         ui->publishFileButton->setEnabled(false);
     }
+}
+
+
+/**
+ * @brief MainWindow::on_numberOfMessagesSetButton_clicked
+ */
+void MainWindow::on_numberOfMessagesSetButton_clicked()
+{
+    auto numberString = ui->numberOfMessagesTextField->text();
+    numberOfMessagesInHistory = numberString.toInt();
+
+    // Set to infinity when set to 0 (or lower)
+    if (numberOfMessagesInHistory <= 0)
+        numberOfMessagesInHistory = INT_MAX;
+
+    refreshValuesList();
 }
 
