@@ -9,6 +9,9 @@ const int	N_RETRY_ATTEMPTS = 5;
 
 /////////////////////////////////////////////////////////////////////////////
 
+/**
+ * @brief Callback for when reconnect is needed
+ */
 void callback::reconnect()
 {
     std::this_thread::sleep_for(std::chrono::milliseconds(2500));
@@ -22,6 +25,10 @@ void callback::reconnect()
 }
 
 
+/**
+ * @brief Callback for when there is a failure
+ * @param tok is a token
+ */
 void callback::on_failure(const mqtt::token& tok)
 {
     if (++nretry_ > N_RETRY_ATTEMPTS)
@@ -30,15 +37,27 @@ void callback::on_failure(const mqtt::token& tok)
 }
 
 
+/**
+ * @brief Callback for when there is success
+ * @param tok is a token
+ */
 void callback::on_success(const mqtt::token& tok) {}
 
 
+/**
+ * @brief Callback for when the client has connected
+ * @param cause of connection
+ */
 void callback::connected(const std::string& cause)
 {
     client.subscribe("#", 0);
 }
 
 
+/**
+ * @brief Callback for when the client connection is lost
+ * @param cause of connection loss
+ */
 void callback::connection_lost(const std::string& cause)
 {
     nretry_ = 0;
@@ -46,17 +65,43 @@ void callback::connection_lost(const std::string& cause)
 }
 
 
+/**
+ * @brief Callback for when a new message arrives.
+ * @param msg is the received message
+ */
 void callback::message_arrived(mqtt::const_message_ptr msg)
 {
     // Process message only if the topic is accepted
-    if (QString::fromStdString(msg->get_topic()).startsWith(mainWindow->topicsFilter))
-        mainWindow->newMessage(QString().fromStdString(msg->get_topic()), msg->get_payload());
+    auto expectedTopicPath = mainWindow->topicsFilter.split("/");
+    auto messageTopicPath = QString::fromStdString(msg->get_topic()).split("/");
+
+    // if the expected topic is more specific, the message is not part of the path and thus not accepted
+    if (expectedTopicPath.length() > messageTopicPath.length())
+        return;
+
+    for (int i = 0; i < expectedTopicPath.length(); i++)
+    {
+        if (expectedTopicPath.at(i) != messageTopicPath.at(i))
+            return;
+    }
+
+    mainWindow->newMessage(QString().fromStdString(msg->get_topic()), msg->get_payload());
 }
 
 
+/**
+ * @brief Callback for when delivery got completed
+ * @param token is a token
+ */
 void callback::delivery_complete(mqtt::delivery_token_ptr token) {}
 
 
+/**
+ * @brief Callback is a class for async handling of Paho MQTT client
+ * @param cli is client instance
+ * @param connOpts are client connection options
+ * @param mainWindow is a pointer to MainWindow object on which a callback function is called when new message is received
+ */
 callback::callback(mqtt::async_client& cli, mqtt::connect_options& connOpts, MainWindow *mainWindow)
             : nretry_(0), client(cli), connectOptions(connOpts), mainWindow(mainWindow) {}
 
