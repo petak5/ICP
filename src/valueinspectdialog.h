@@ -1,3 +1,10 @@
+/**
+ * @file valueinspecdialog.h
+ * @brief Header file for value inspect dialog class
+ * @author Peter Urgoš (xurgos00)
+ * @date 9.5.2021
+ */
+
 #ifndef VALUEINSPECTDIALOG_H
 #define VALUEINSPECTDIALOG_H
 

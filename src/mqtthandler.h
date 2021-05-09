@@ -1,3 +1,10 @@
+/**
+ * @file mqtthandler.h
+ * @brief Header file for MQTT handler class
+ * @author Peter Urgoš (xurgos00)
+ * @date 9.5.2021
+ */
+
 #ifndef MQTTHANDLER_H
 #define MQTTHANDLER_H
 

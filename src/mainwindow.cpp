@@ -1,3 +1,10 @@
+/**
+ * @file mainwindow.cpp
+ * @brief Source file of main window class
+ * @author Peter Urgoš (xurgos00)
+ * @date 9.5.2021
+ */
+
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 #include <fstream>

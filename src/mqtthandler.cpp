@@ -1,3 +1,10 @@
+/**
+ * @file mqtthandler.cpp
+ * @brief Implementation of MQTT handler class
+ * @author Peter Urgoš (xurgos00)
+ * @date 9.5.2021
+ */
+
 #include "mqtthandler.h"
 #include <string>
 #include "mainwindow.h"

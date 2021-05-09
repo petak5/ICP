@@ -1,3 +1,10 @@
+/**
+ * @file valueinspecdialog.cpp
+ * @brief Implementation of value inspect dialog class
+ * @author Peter Urgoš (xurgos00)
+ * @date 9.5.2021
+ */
+
 #include "valueinspectdialog.h"
 #include "ui_valueinspectdialog.h"
 

@@ -1,3 +1,8 @@
+# File: ICP.pro
+# Brief: MQTT Explorer
+# Author: Peter Urgoš (xurgos00)
+# Date 9.5.2021
+
 QT       += core gui
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
