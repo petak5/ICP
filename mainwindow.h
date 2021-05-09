@@ -40,6 +40,8 @@ public:
 
     void newMessage(QString topic, std::string payload);
 
+    QString topicsFilter = "";
+
 private slots:
     void on_subscribeButton_clicked();
 

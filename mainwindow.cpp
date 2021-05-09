@@ -348,18 +348,19 @@ void MainWindow::on_subscribeButton_clicked()
 {
     auto topic = ui->subscribeTopicTextField->text();
 
-    if (topic.isEmpty()) return;
+    if (topic.isEmpty())
+        return;
 
-    mqttHandler->subscribe(topic);
+    topicsFilter = topic;
 }
 
 
 /**
- * @brief Reset topic subscibtion to no topic (display all topics)
+ * @brief Reset topic subscibtion to no topic (receive all topics)
  */
 void MainWindow::on_subscribeResetButton_clicked()
 {
-    // model.resetTopic();
+    topicsFilter = "";
 }
 
 

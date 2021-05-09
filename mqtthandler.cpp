@@ -48,8 +48,9 @@ void callback::connection_lost(const std::string& cause)
 
 void callback::message_arrived(mqtt::const_message_ptr msg)
 {
-    //QByteArray data(msg->get_payload_str().c_str(), msg->get_payload().length());
-    mainWindow->newMessage(QString().fromStdString(msg->get_topic()), msg->get_payload());
+    // Process message only if the topic is accepted
+    if (QString::fromStdString(msg->get_topic()).startsWith(mainWindow->topicsFilter))
+        mainWindow->newMessage(QString().fromStdString(msg->get_topic()), msg->get_payload());
 }
 
 
@@ -96,11 +97,5 @@ void MqttHandler::publishMessage(QString topic, std::string message)
     catch (const mqtt::exception& exc) {
         std::cerr << "Error: " << exc.what() << std::endl;
     }
-}
-
-
-void MqttHandler::subscribe(QString topic)
-{
-    // TODO
 }
 

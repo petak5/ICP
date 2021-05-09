@@ -40,10 +40,8 @@ class MqttHandler
 public:
     MqttHandler(QString address, QString port, MainWindow *mainWindow);
     void publishMessage(QString topic, std::string message);
-    void subscribe(QString topic);
 private:
     mqtt::async_client client;
-    bool isSubscribed = false;
     mqtt::connect_options connOpts;
     callback cb;
 };
