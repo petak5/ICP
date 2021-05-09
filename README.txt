@@ -1,3 +1,11 @@
+MQTT Explorer
+
+Autor: Peter Urgoš
+Dátum: 9.5.2021
+
+Nedostatky:
+  - Dashboard nie je implementovaný
+
 Pouzite zdroje:
   - https://github.com/eclipse/paho.mqtt.cpp/blob/master/src/samples/async_subscribe.cpp
   - https://www.eclipse.org/paho/files/cppdoc/classmqtt_1_1callback.html
