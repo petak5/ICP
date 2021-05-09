@@ -393,7 +393,7 @@ void MainWindow::on_publishTextButton_clicked()
 
     if (topic.isEmpty() || message.isEmpty()) return;
 
-    mqttHandler->publishMessage(topic, message);
+    mqttHandler->publishMessage(topic, message.toStdString());
 }
 
 
@@ -410,7 +410,10 @@ void MainWindow::on_publishFileButton_clicked()
     std::ifstream ifs(filePath.toStdString());
     std::string content((std::istreambuf_iterator<char>(ifs)), (std::istreambuf_iterator<char>()));
 
-    mqttHandler->publishMessage(topic, content.c_str());
+    if (content.empty())
+        return;
+
+    mqttHandler->publishMessage(topic, content);
 }
 
 // ------------ //

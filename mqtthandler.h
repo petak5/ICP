@@ -39,8 +39,7 @@ class MqttHandler
 {
 public:
     MqttHandler(QString address, QString port, MainWindow *mainWindow);
-    void publishMessage(QString topic, QString message);
-    void publishFile(QString topic, QString filePath);
+    void publishMessage(QString topic, std::string message);
     void subscribe(QString topic);
 private:
     mqtt::async_client client;

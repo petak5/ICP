@@ -62,6 +62,12 @@ callback::callback(mqtt::async_client& cli, mqtt::connect_options& connOpts, Mai
 /////////////////////////////////////////////////////////////////////////////
 
 
+/**
+ * @brief Handler for MQTT interaction
+ * @param address of the MQTT broker
+ * @param port of the MQTT broker
+ * @param mainWindow is pointer to Main Window in which a callback function is called when message is received
+ */
 MqttHandler::MqttHandler(QString address, QString port, MainWindow *mainWindow)
     : client(address.append(":").append(port).toStdString(), "ICP_project"), cb(client, connOpts, mainWindow)
 {
@@ -77,10 +83,15 @@ MqttHandler::MqttHandler(QString address, QString port, MainWindow *mainWindow)
 }
 
 
-void MqttHandler::publishMessage(QString topic, QString message)
+/**
+ * @brief Publish message to a topic
+ * @param topic to publish to
+ * @param message to publish
+ */
+void MqttHandler::publishMessage(QString topic, std::string message)
 {
     try {
-        client.publish(topic.toStdString(), message.toStdString().c_str(), message.length(), 0, false);
+        client.publish(topic.toStdString(), message.data(), message.length(), 0, false);
     }
     catch (const mqtt::exception& exc) {
         std::cerr << "Error: " << exc.what() << std::endl;
@@ -88,14 +99,8 @@ void MqttHandler::publishMessage(QString topic, QString message)
 }
 
 
-void MqttHandler::publishFile(QString topic, QString filePath)
-{
-    // TODO
-    return;
-}
-
-
 void MqttHandler::subscribe(QString topic)
 {
+    // TODO
 }
 
