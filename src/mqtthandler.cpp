@@ -78,18 +78,21 @@ void callback::connection_lost(const std::string& cause)
  */
 void callback::message_arrived(mqtt::const_message_ptr msg)
 {
-    // Process message only if the topic is accepted
-    auto expectedTopicPath = mainWindow->topicsFilter.split("/");
-    auto messageTopicPath = QString::fromStdString(msg->get_topic()).split("/");
-
-    // if the expected topic is more specific, the message is not part of the path and thus not accepted
-    if (expectedTopicPath.length() > messageTopicPath.length())
-        return;
-
-    for (int i = 0; i < expectedTopicPath.length(); i++)
+    if (!mainWindow->topicsFilter.isEmpty())
     {
-        if (expectedTopicPath.at(i) != messageTopicPath.at(i))
+        // Process message only if the topic is accepted
+        auto expectedTopicPath = mainWindow->topicsFilter.split("/");
+        auto messageTopicPath = QString::fromStdString(msg->get_topic()).split("/");
+
+        // if the expected topic is more specific, the message is not part of the path and thus not accepted
+        if (expectedTopicPath.length() > messageTopicPath.length())
             return;
+
+        for (int i = 0; i < expectedTopicPath.length(); i++)
+        {
+            if (expectedTopicPath.at(i) != messageTopicPath.at(i))
+                return;
+        }
     }
 
     mainWindow->newMessage(QString().fromStdString(msg->get_topic()), msg->get_payload());
