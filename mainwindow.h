@@ -15,15 +15,15 @@ class Topic
 public:
     Topic(QString topic);
     QString getTopic();
-    void addMessage(QString message);
-    QList<QString *> &getMessages();
+    void addMessage(std::string message);
+    QList<std::string *> &getMessages();
 
     Topic * findTopic(QStringList path);
     Topic * addTopic(Topic *topic);
 
 private:
     QString topic;
-    QList<QString *> messages;
+    QList<std::string *> messages;
     QList<Topic *> children;
 
     void addChild(Topic *topic);
@@ -38,7 +38,7 @@ public:
     MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
 
-    void newMessage(QString topic, QString message);
+    void newMessage(QString topic, std::string payload);
 
 private slots:
     void on_subscribeButton_clicked();
@@ -64,6 +64,8 @@ private:
 
     QTreeWidgetItem * treeViewAddRootItem(QString name);
     QTreeWidgetItem * treeViewAddItem(QTreeWidgetItem *parent, QString name);
+    QStringList treeViewGetPathToCurrentItem();
+    Topic *treeViewFindTopic(QStringList path);
     void refreshValuesList();
 };
 

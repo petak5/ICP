@@ -16,14 +16,14 @@ QString Topic::getTopic() { return topic; }
  * @brief Add message to topic
  * @param message to add
  */
-void Topic::addMessage(QString message) { messages.append(new QString(message)); }
+void Topic::addMessage(std::string message) { messages.append(new std::string(message)); }
 
 
 /**
  * @brief Get all messages
  * @return list of messages
  */
-QList<QString *> &Topic::getMessages() { return messages; };
+QList<std::string *> &Topic::getMessages() { return messages; };
 
 
 /**
@@ -127,7 +127,7 @@ MainWindow::~MainWindow()
  * @param topic is the topic of the message
  * @param message is the message's conetnt (payload)
  */
-void MainWindow::newMessage(QString topic, QString message)
+void MainWindow::newMessage(QString topic, std::string payload)
 {
     auto topicPath = topic.split(QString("/"));
 
@@ -158,7 +158,7 @@ void MainWindow::newMessage(QString topic, QString message)
         topicObject = row->addTopic(new Topic(topic));
     }
 
-    topicObject->addMessage(message);
+    topicObject->addMessage(payload);
 
     // Append topics/subtopics to UI tree
     if (topicPath.length() > 0)
@@ -231,18 +231,13 @@ QTreeWidgetItem * MainWindow::treeViewAddItem(QTreeWidgetItem *parent, QString t
 }
 
 
-/**
- * @brief Fills value history list with values related to the currently selected item in tree widget
- */
-void MainWindow::refreshValuesList()
+QStringList MainWindow::treeViewGetPathToCurrentItem()
 {
-    ui->valueHistoryList->clear();
-    ui->valueTextField->clear();
-
     // Get path from tree
     auto currentItem = ui->treeWidget->currentItem();
     if (currentItem == nullptr)
-        return;
+        return QStringList();
+
     auto itemPath = QStringList(currentItem->text(0));
 
     while (currentItem->parent() != NULL)
@@ -251,10 +246,16 @@ void MainWindow::refreshValuesList()
         currentItem = currentItem->parent();
     }
 
+    return itemPath;
+}
+
+
+Topic *MainWindow::treeViewFindTopic(QStringList path)
+{
     Topic *rootTopic = nullptr;
     for (int i = 0; i < topicsTree.length(); i++)
     {
-        if (topicsTree.at(i)->getTopic() == itemPath[0])
+        if (topicsTree.at(i)->getTopic() == path[0])
         {
             rootTopic = topicsTree.at(i);
             break;
@@ -262,10 +263,27 @@ void MainWindow::refreshValuesList()
     }
 
     if (rootTopic == nullptr)
+        return nullptr;
+
+
+    auto topic = rootTopic->findTopic(path);
+    return topic;
+}
+
+
+/**
+ * @brief Fills value history list with values related to the currently selected item in tree widget
+ */
+void MainWindow::refreshValuesList()
+{
+    ui->valueHistoryList->clear();
+    ui->valueTextField->clear();
+
+    auto itemPath = treeViewGetPathToCurrentItem();
+    if (itemPath.empty())
         return;
 
-
-    auto topic = rootTopic->findTopic(itemPath);
+    auto topic = treeViewFindTopic(itemPath);
     if (topic == nullptr)
         return;
 
@@ -273,7 +291,7 @@ void MainWindow::refreshValuesList()
     QStringList values;
     for (int i = 0; i < messages.length(); i++)
     {
-        values.append(messages.at(i)->toStdString().c_str());
+        values.append(QString::fromStdString(messages.at(i)->data()));
     }
 
     ui->valueHistoryList->addItems(values);
@@ -358,7 +376,7 @@ void MainWindow::on_publishTextButton_clicked()
 void MainWindow::on_publishFileButton_clicked()
 {
     auto topic = ui->publishTopicTextField->text();
-    auto filePath = ui->publishFilePathTextField->text();
+    auto filePath = ui->publishFilePathTextField->text().trimmed();
 
     if (topic.isEmpty() || filePath.isEmpty()) return;
 

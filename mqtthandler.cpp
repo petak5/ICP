@@ -48,7 +48,8 @@ void callback::connection_lost(const std::string& cause)
 
 void callback::message_arrived(mqtt::const_message_ptr msg)
 {
-    mainWindow->newMessage(QString().fromStdString(msg->get_topic()), QString().fromStdString(msg->to_string()));
+    //QByteArray data(msg->get_payload_str().c_str(), msg->get_payload().length());
+    mainWindow->newMessage(QString().fromStdString(msg->get_topic()), msg->get_payload());
 }
 
 
