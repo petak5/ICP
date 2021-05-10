@@ -592,6 +592,7 @@ void MainWindow::on_widgetAddButton_clicked()
 {
     auto widgetName = ui->widgetNameText->text().trimmed();
     auto widgetType = ui->widgetAddBox->currentText().trimmed();
+    auto widgetTopic = ui->widgetTopicText->text().trimmed();
 
     if(ui->widgetRemoveBox->count() == 12)
     {
@@ -609,6 +610,17 @@ void MainWindow::on_widgetAddButton_clicked()
         QMessageBox dialog;
         dialog.setWindowTitle("Widget name is empty");
         auto text = QString("Widget name can't be empty. Please select a name");
+        dialog.setText(text);
+
+        dialog.exec();
+        return;
+    }
+
+    if(widgetTopic == "")
+    {
+        QMessageBox dialog;
+        dialog.setWindowTitle("Widget topic is empty");
+        auto text = QString("Widget topic can't be empty. Please select a topic");
         dialog.setText(text);
 
         dialog.exec();
