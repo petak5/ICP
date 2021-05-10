@@ -73,6 +73,10 @@ private slots:
 
     void on_exportButton_clicked();
 
+    void on_widgetAddButton_clicked();
+
+    void on_widgetRemoveButton_clicked();
+
 private:
     Ui::MainWindow *ui;
     MqttHandler *mqttHandler = nullptr;

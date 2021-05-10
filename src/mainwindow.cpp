@@ -587,3 +587,68 @@ void MainWindow::on_exportButton_clicked()
     }
 }
 
+
+void MainWindow::on_widgetAddButton_clicked()
+{
+    auto widgetName = ui->widgetNameText->text().trimmed();
+    auto widgetType = ui->widgetAddBox->currentText().trimmed();
+
+    if(ui->widgetRemoveBox->count() == 12)
+    {
+        QMessageBox dialog;
+        dialog.setWindowTitle("Maximum number of widgets");
+        auto text = QString("Can't create more widgets, maximum number of widgets has been reached. Please remove some widgets before creating new nes.");
+        dialog.setText(text);
+
+        dialog.exec();
+        return;
+    }
+
+    if(widgetName == "")
+    {
+        QMessageBox dialog;
+        dialog.setWindowTitle("Widget name is empty");
+        auto text = QString("Widget name can't be empty. Please select a name");
+        dialog.setText(text);
+
+        dialog.exec();
+        return;
+    }
+
+    ui->widgetNameText->clear();
+
+    if(ui->widgetRemoveBox->findText(widgetName, Qt::MatchCaseSensitive|Qt::MatchExactly) != -1)
+    {
+        QMessageBox dialog;
+        dialog.setWindowTitle("Widget name duplicate");
+        auto text = QString("Widget name already exists. Please select a different name.");
+        dialog.setText(text);
+
+        dialog.exec();
+        return;
+    }
+
+    ui->widgetRemoveBox->addItem(widgetName);
+
+    //TO DO: create widget
+}
+
+
+void MainWindow::on_widgetRemoveButton_clicked()
+{
+    if(ui->widgetRemoveBox->count() == 0 || ui->widgetRemoveBox->currentText().trimmed() == "")
+    {
+        QMessageBox dialog;
+        dialog.setWindowTitle("Widget count is zero");
+        auto text = QString("No widget selected to delete or no widget exists.");
+        dialog.setText(text);
+
+        dialog.exec();
+        return;
+    }
+
+    ui->widgetRemoveBox->removeItem(ui->widgetRemoveBox->currentIndex());
+
+    //TO DO: remove widget
+}
+

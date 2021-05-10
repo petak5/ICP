@@ -18,7 +18,7 @@
     <item>
      <widget class="QTabWidget" name="tabWidget">
       <property name="currentIndex">
-       <number>2</number>
+       <number>1</number>
       </property>
       <widget class="QWidget" name="explorer_tab">
        <attribute name="title">
@@ -302,11 +302,143 @@
        </attribute>
        <layout class="QVBoxLayout" name="verticalLayout_6">
         <item>
-         <widget class="QLabel" name="label">
-          <property name="text">
-           <string>Not Implemented</string>
+         <widget class="QGroupBox" name="horizontalGroupBox">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
           </property>
+          <layout class="QGridLayout" name="gridLayout_2">
+           <item row="3" column="1">
+            <widget class="QPushButton" name="widgetRemoveButton">
+             <property name="text">
+              <string>Remove Widget</string>
+             </property>
+            </widget>
+           </item>
+           <item row="0" column="0">
+            <widget class="QLabel" name="widgetTypeLabel">
+             <property name="text">
+              <string>Widget Type</string>
+             </property>
+            </widget>
+           </item>
+           <item row="1" column="2">
+            <spacer name="verticalSpacer">
+             <property name="orientation">
+              <enum>Qt::Vertical</enum>
+             </property>
+             <property name="sizeType">
+              <enum>QSizePolicy::Fixed</enum>
+             </property>
+             <property name="sizeHint" stdset="0">
+              <size>
+               <width>20</width>
+               <height>40</height>
+              </size>
+             </property>
+            </spacer>
+           </item>
+           <item row="1" column="3">
+            <widget class="QPushButton" name="widgetAddButton">
+             <property name="text">
+              <string>Add Widget</string>
+             </property>
+            </widget>
+           </item>
+           <item row="3" column="0">
+            <widget class="QComboBox" name="widgetRemoveBox"/>
+           </item>
+           <item row="0" column="1">
+            <widget class="QLabel" name="label_2">
+             <property name="text">
+              <string>Widget Name</string>
+             </property>
+            </widget>
+           </item>
+           <item row="1" column="1">
+            <widget class="QLineEdit" name="widgetNameText">
+             <property name="toolTip">
+              <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Widget Name&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+             </property>
+             <property name="text">
+              <string/>
+             </property>
+            </widget>
+           </item>
+           <item row="1" column="0">
+            <widget class="QComboBox" name="widgetAddBox">
+             <property name="sizePolicy">
+              <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+               <horstretch>0</horstretch>
+               <verstretch>0</verstretch>
+              </sizepolicy>
+             </property>
+             <item>
+              <property name="text">
+               <string>Temperature</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>Humidity</string>
+              </property>
+             </item>
+            </widget>
+           </item>
+           <item row="2" column="0">
+            <widget class="QLabel" name="label_3">
+             <property name="text">
+              <string>Widget to be removed</string>
+             </property>
+            </widget>
+           </item>
+          </layout>
          </widget>
+        </item>
+        <item>
+         <layout class="QGridLayout" name="gridLayout">
+          <property name="sizeConstraint">
+           <enum>QLayout::SetDefaultConstraint</enum>
+          </property>
+          <item row="1" column="2">
+           <widget class="QWidget" name="widget_6" native="true"/>
+          </item>
+          <item row="0" column="2">
+           <widget class="QWidget" name="widget_3" native="true"/>
+          </item>
+          <item row="2" column="2">
+           <widget class="QWidget" name="widget_9" native="true"/>
+          </item>
+          <item row="2" column="1">
+           <widget class="QWidget" name="widget_8" native="true"/>
+          </item>
+          <item row="1" column="1">
+           <widget class="QWidget" name="widget_5" native="true"/>
+          </item>
+          <item row="0" column="1">
+           <widget class="QWidget" name="widget_2" native="true"/>
+          </item>
+          <item row="0" column="0">
+           <widget class="QWidget" name="widget_1" native="true"/>
+          </item>
+          <item row="1" column="0">
+           <widget class="QWidget" name="widget_4" native="true"/>
+          </item>
+          <item row="2" column="0">
+           <widget class="QWidget" name="widget_7" native="true"/>
+          </item>
+          <item row="3" column="0">
+           <widget class="QWidget" name="widget_10" native="true"/>
+          </item>
+          <item row="3" column="1">
+           <widget class="QWidget" name="widget_11" native="true"/>
+          </item>
+          <item row="3" column="2">
+           <widget class="QWidget" name="widget_12" native="true"/>
+          </item>
+         </layout>
         </item>
        </layout>
       </widget>
