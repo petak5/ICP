@@ -13,6 +13,8 @@
 #include <QMessageBox>
 #include <QtWidgets>
 #include <QSizePolicy>
+#include <QThread>
+#include <QUrl>
 
 Topic::Topic(QString topic) : topic(topic) {}
 
@@ -174,9 +176,9 @@ void Topic::exportToDisk(QDir directory)
     }
 }
 
-
-// Main Window
-
+//-------------//
+// Main Window //
+//-------------//
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -189,6 +191,8 @@ MainWindow::MainWindow(QWidget *parent)
 
 MainWindow::~MainWindow()
 {
+    if (simulator != nullptr)
+        simulator->stop();
     delete ui;
 }
 
@@ -201,6 +205,8 @@ MainWindow::~MainWindow()
 void MainWindow::newMessage(QString topic, std::string payload)
 {
     auto topicPath = topic.split(QString("/"));
+    if (topicPath.length() <= 0)
+        return;
 
     int topicsRowIndex = -1;
     for (int i = 0; i < topicsTree.length(); i++)
@@ -378,11 +384,7 @@ void MainWindow::refreshValuesList()
 
     ui->valueHistoryList->addItems(values);
 
-    // Select the first item
-    ui->valueHistoryList->clearSelection();
-    auto firstItem = ui->valueHistoryList->item(0);
-    if (firstItem != nullptr)
-        ui->valueHistoryList->setCurrentItem(firstItem);
+    QThread::msleep(20);
 }
 
 
@@ -403,7 +405,10 @@ void MainWindow::on_subscribeButton_clicked()
     auto topic = ui->subscribeTopicTextField->text();
 
     if (topic.isEmpty())
+    {
+        presentDialog("No topic provided", "Please provide a topic to subscribe. To subscribe to all topics press Reset button below Subscibe button.");
         return;
+    }
 
     topicsFilter = topic;
 }
@@ -424,6 +429,11 @@ void MainWindow::on_subscribeResetButton_clicked()
 void MainWindow::on_valueInspectButton_clicked()
 {
     auto selectedIndex = ui->valueHistoryList->currentIndex();
+    if (!selectedIndex.isValid())
+    {
+        presentDialog("No value selected", "Please select a value from value history list.");
+        return;
+    }
 
     auto itemPath = treeViewGetPathToCurrentItem();
     if (itemPath.empty())
@@ -447,6 +457,12 @@ void MainWindow::on_valueInspectButton_clicked()
 }
 
 
+void MainWindow::on_valueHistoryList_itemDoubleClicked(QListWidgetItem *item)
+{
+    on_valueInspectButton_clicked();
+}
+
+
 /**
  * @brief Update displayed value when item from history is selected
  */
@@ -465,7 +481,16 @@ void MainWindow::on_publishTextButton_clicked()
     auto topic = ui->publishTopicTextField->text();
     auto message = ui->publishTextMessageTextField->text();
 
-    if (topic.isEmpty() || message.isEmpty()) return;
+    if (topic.isEmpty())
+    {
+        presentDialog("No topic provided", "Please provide a topic for sending the message.");
+        return;
+    }
+    if (message.isEmpty())
+    {
+        presentDialog("No message provided", "Please provide a message to send.");
+        return;
+    }
 
     mqttHandler->publishMessage(topic, message.toStdString());
 }
@@ -479,19 +504,23 @@ void MainWindow::on_publishFileButton_clicked()
     auto topic = ui->publishTopicTextField->text();
     auto filePath = ui->publishFilePathTextField->text().trimmed();
 
-    if (topic.isEmpty() || filePath.isEmpty()) return;
+    if (topic.isEmpty())
+    {
+        presentDialog("No topic provided", "Please provide a topic for sending the message.");
+        return;
+    }
+    if (filePath.isEmpty())
+    {
+        presentDialog("No file path provided", "Please provide a path to file.");
+        return;
+    }
 
     QFile file(filePath);
     QFileInfo fileInfo(filePath);
     if (!fileInfo.isFile())
     {
-        QMessageBox dialog;
-        dialog.setWindowTitle("Invalid file name");
         auto text = QString("File '").append(filePath).append("' either does not exist or is not a file. Please check if you've provided the correct path.");
-        dialog.setText(text);
-
-        dialog.exec();
-        return;
+        presentDialog("Invalid file name", text);
     }
 
     std::ifstream ifs(filePath.toStdString());
@@ -516,21 +545,35 @@ void MainWindow::on_connectToServerButton_clicked()
     {
         auto address = ui->AddressTextField->text();
         auto port = ui->PortTextField->text();
-        auto username = ui->UsernameTextField->text();
-        auto password = ui->passwordTextField->text();
 
-        if (address.isEmpty() || port.isEmpty()) return;
+        if (address.isEmpty())
+        {
+            presentDialog("No address provided", "Please enter an address of server.");
+            return;
+        }
+        if (port.isEmpty())
+        {
+            presentDialog("No port provided", "Please enter a port of server.");
+            return;
+        }
 
-        mqttHandler = new MqttHandler(address, port, this);
+        QUrl url = QUrl::fromUserInput(QString(address).append(":").append(port));
+        if (!url.isValid())
+        {
+            auto text = QString("'").append(url.url()).append("' is not a valid address.");
+            presentDialog("Invalid address", text);
+            return;
+        }
+
+        mqttHandler = new MqttHandler(address, port, "xurgos00_ICP_explorer", this);
 
         if (mqttHandler != nullptr)
         {
             ui->connectToServerButton->setText("Disconnect");
 
-            ui->subscribeButton->setEnabled(true);
-            ui->subscribeResetButton->setEnabled(true);
             ui->publishTextButton->setEnabled(true);
             ui->publishFileButton->setEnabled(true);
+            ui->simulatorButton->setEnabled(true);
         }
     }
     else
@@ -540,10 +583,13 @@ void MainWindow::on_connectToServerButton_clicked()
 
         ui->connectToServerButton->setText("Connect");
 
-        ui->subscribeButton->setEnabled(false);
-        ui->subscribeResetButton->setEnabled(false);
+        if (simulator != nullptr)
+            simulator->stop();
+        ui->simulatorButton->setChecked(false);
+        ui->simulatorButton->setText("Run");
         ui->publishTextButton->setEnabled(false);
         ui->publishFileButton->setEnabled(false);
+        ui->simulatorButton->setEnabled(false);
     }
 }
 
@@ -554,6 +600,12 @@ void MainWindow::on_connectToServerButton_clicked()
 void MainWindow::on_numberOfMessagesSetButton_clicked()
 {
     auto numberString = ui->numberOfMessagesTextField->text();
+    if (numberString.isEmpty())
+    {
+        presentDialog("No input provided", "Please enter a number for how many messages should be stored.");
+        return;
+    }
+
     numberOfMessagesInHistory = numberString.toInt();
 
     // Set to infinity when set to 0 (or lower)
@@ -564,22 +616,24 @@ void MainWindow::on_numberOfMessagesSetButton_clicked()
 }
 
 
+/**
+ * @brief Export captured data to disk
+ */
 void MainWindow::on_exportButton_clicked()
 {
     auto directoryPath = ui->exportPathTextField->text().trimmed();
 
     if (directoryPath.isEmpty())
+    {
+        presentDialog("No path provided", "Please enter path where to save captured data.");
         return;
+    }
 
     auto directory = QDir(directoryPath);
     if (!directory.isEmpty())
     {
-        QMessageBox dialog;
-        dialog.setWindowTitle("Directory is not empty");
-        auto text = QString("Directory '").append(directory.path()).append("' is not empty. Please choose another path.");
-        dialog.setText(text);
-
-        dialog.exec();
+        auto text = QString("Directory '").append(directory.path()).append("' is not empty. Please choose different path.");
+        presentDialog("Directory is not empty", text);
         return;
     }
 
@@ -590,6 +644,37 @@ void MainWindow::on_exportButton_clicked()
 }
 
 //TO DO: subsribe to topic if not subscribed
+
+/**
+ * @brief Run or stop simulator
+ */
+void MainWindow::on_simulatorButton_clicked()
+{
+    if (mqttHandler == nullptr)
+        return;
+
+    if (simulator == nullptr)
+        simulator = new Simulator(mqttHandler->getAddress(), mqttHandler->getPort(), "xurgos00_ICP_simulator");
+
+    auto doSimulate = ui->simulatorButton->isChecked();
+
+    if (doSimulate)
+    {
+        simulator->run();
+        ui->simulatorButton->setText("Stop");
+    }
+    else
+    {
+        simulator->stop();
+        ui->simulatorButton->setText("Run");
+    }
+}
+
+
+//-----------//
+// Dashboard //
+//-----------//
+
 void MainWindow::on_widgetAddButton_clicked()
 {
     auto widgetName = ui->widgetNameText->text().trimmed();
@@ -704,6 +789,7 @@ void MainWindow::on_widgetRemoveButton_clicked()
     ui->widgetRemoveBox->removeItem(ui->widgetRemoveBox->currentIndex());
 }
 
+
 void MainWindow::on_widgetSwitchButton_clicked()
 {
     QPushButton *button = qobject_cast<QPushButton *>(sender());
@@ -725,6 +811,7 @@ void MainWindow::on_widgetSwitchButton_clicked()
 
     mqttHandler->publishMessage(topic, newState.toStdString());
 }
+
 
 void MainWindow::on_widgetTextButton_clicked()
 {
@@ -748,6 +835,7 @@ void MainWindow::on_widgetTextButton_clicked()
 
     mqttHandler->publishMessage(topic, text.toStdString());
 }
+
 
 void MainWindow::messageHandler(mqtt::const_message_ptr msg)
 {
@@ -790,6 +878,7 @@ void MainWindow::messageHandler(mqtt::const_message_ptr msg)
 
 }
 
+
 QWidget *MainWindow::getWidgetPtr(int index)
 {
     switch(index)
@@ -822,6 +911,7 @@ QWidget *MainWindow::getWidgetPtr(int index)
 
     return nullptr;
 }
+
 
 void MainWindow::createSwitch(QWidget* interface, QString name, QString topic)
 {
@@ -858,6 +948,7 @@ void MainWindow::createSwitch(QWidget* interface, QString name, QString topic)
     layout->addWidget(id);
 }
 
+
 void MainWindow::createDisplay(QWidget *interface, QString name, QString topic)
 {
     QVBoxLayout *layout = new QVBoxLayout(interface);
@@ -886,6 +977,7 @@ void MainWindow::createDisplay(QWidget *interface, QString name, QString topic)
     layout->setObjectName(topic);
     layout->addWidget(id);
 }
+
 
 void MainWindow::createText(QWidget *interface, QString name, QString topic)
 {
@@ -922,6 +1014,7 @@ void MainWindow::createText(QWidget *interface, QString name, QString topic)
     layout->setObjectName(topic);
 }
 
+
 void MainWindow::messageSwitchHandler(mqtt::const_message_ptr msg, QWidget *interface)
 {
     auto payload = msg->get_payload();
@@ -929,6 +1022,7 @@ void MainWindow::messageSwitchHandler(mqtt::const_message_ptr msg, QWidget *inte
 
     label->setText(QString().fromStdString(payload));
 }
+
 
 void MainWindow::messageDisplayHandler(mqtt::const_message_ptr msg, QWidget *interface)
 {
@@ -938,6 +1032,7 @@ void MainWindow::messageDisplayHandler(mqtt::const_message_ptr msg, QWidget *int
     display->display(QString().fromStdString(payload));
 }
 
+
 void MainWindow::messageTextHandler(mqtt::const_message_ptr msg, QWidget *interface)
 {
     auto payload = msg->get_payload();
@@ -945,3 +1040,20 @@ void MainWindow::messageTextHandler(mqtt::const_message_ptr msg, QWidget *interf
 
     text->append(QString().fromStdString(payload));
 }
+
+
+/**
+ * @brief Present a dialog
+ * @param title of the dialog window
+ * @param text of the dialgo window
+ */
+void MainWindow::presentDialog(QString title, QString text)
+{
+    QMessageBox dialog;
+    dialog.setWindowTitle(title);
+    dialog.setText(text);
+
+    dialog.exec();
+    return;
+}
+

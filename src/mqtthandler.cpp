@@ -56,7 +56,8 @@ void callback::on_success(const mqtt::token& tok) {}
  * @param cause of connection
  */
 void callback::connected(const std::string& cause)
-{
+{    
+    client.subscribe("$SYS/#", 0);
     client.subscribe("#", 0);
 }
 
@@ -78,6 +79,10 @@ void callback::connection_lost(const std::string& cause)
  */
 void callback::message_arrived(mqtt::const_message_ptr msg)
 {
+    if (mainWindow == nullptr)
+        return;
+
+    // Widgets callback
     mainWindow->messageHandler(msg);
 
     if (!mainWindow->topicsFilter.isEmpty())
@@ -97,6 +102,7 @@ void callback::message_arrived(mqtt::const_message_ptr msg)
         }
     }
 
+    // Explorer's callback
     mainWindow->newMessage(QString().fromStdString(msg->get_topic()), msg->get_payload());
 }
 
@@ -124,12 +130,18 @@ callback::callback(mqtt::async_client& cli, mqtt::connect_options& connOpts, Mai
  * @brief Handler for MQTT interaction
  * @param address of the MQTT broker
  * @param port of the MQTT broker
+ * @param clientId for the MQTT client
  * @param mainWindow is pointer to Main Window in which a callback function is called when message is received
  */
-MqttHandler::MqttHandler(QString address, QString port, MainWindow *mainWindow)
-    : client(address.append(":").append(port).toStdString(), "ICP_project"), cb(client, connOpts, mainWindow)
+MqttHandler::MqttHandler(QString address, QString port, QString clientId, MainWindow *mainWindow)
+    : client(QString(address).append(":").append(port).toStdString(), clientId.toStdString()), cb(client, connOpts, mainWindow)
 {
+    this->address = address;
+    this->port = port;
+
     client.set_callback(cb);
+
+    connOpts.set_clean_session(true);
 
     try {
         client.connect(connOpts, nullptr, cb);
@@ -155,4 +167,10 @@ void MqttHandler::publishMessage(QString topic, std::string message)
         std::cerr << "Error: " << exc.what() << std::endl;
     }
 }
+
+
+QString MqttHandler::getAddress() { return this->address; }
+
+
+QString MqttHandler::getPort() { return this->port; }
 

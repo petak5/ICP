@@ -18,7 +18,7 @@
     <item>
      <widget class="QTabWidget" name="tabWidget">
       <property name="currentIndex">
-       <number>1</number>
+       <number>2</number>
       </property>
       <widget class="QWidget" name="explorer_tab">
        <attribute name="title">
@@ -67,7 +67,10 @@
             <item>
              <widget class="QPushButton" name="subscribeButton">
               <property name="enabled">
-               <bool>false</bool>
+               <bool>true</bool>
+              </property>
+              <property name="toolTip">
+               <string>Subscribe to specified topic.</string>
               </property>
               <property name="text">
                <string>Subscribe</string>
@@ -77,7 +80,10 @@
             <item>
              <widget class="QPushButton" name="subscribeResetButton">
               <property name="enabled">
-               <bool>false</bool>
+               <bool>true</bool>
+              </property>
+              <property name="toolTip">
+               <string>Listen to all topics.</string>
               </property>
               <property name="text">
                <string>Reset</string>
@@ -142,6 +148,9 @@
             </item>
             <item>
              <widget class="QPushButton" name="valueInspectButton">
+              <property name="toolTip">
+               <string>Inspect value in a more detailed dialog.</string>
+              </property>
               <property name="text">
                <string>Inspect value</string>
               </property>
@@ -245,6 +254,9 @@
               <property name="enabled">
                <bool>false</bool>
               </property>
+              <property name="toolTip">
+               <string>Publish text message to specified topic.</string>
+              </property>
               <property name="text">
                <string>Publish text</string>
               </property>
@@ -271,6 +283,9 @@
              <widget class="QPushButton" name="publishFileButton">
               <property name="enabled">
                <bool>false</bool>
+              </property>
+              <property name="toolTip">
+               <string>Publish file from specified path to topic.</string>
               </property>
               <property name="text">
                <string>Publish file</string>
@@ -463,6 +478,22 @@
        </attribute>
        <layout class="QVBoxLayout" name="verticalLayout_5">
         <item>
+         <spacer name="verticalSpacer_15">
+          <property name="orientation">
+           <enum>Qt::Vertical</enum>
+          </property>
+          <property name="sizeType">
+           <enum>QSizePolicy::Fixed</enum>
+          </property>
+          <property name="sizeHint" stdset="0">
+           <size>
+            <width>20</width>
+            <height>8</height>
+           </size>
+          </property>
+         </spacer>
+        </item>
+        <item>
          <layout class="QVBoxLayout" name="verticalLayout_2">
           <item>
            <layout class="QHBoxLayout" name="AddressHorizontalStack">
@@ -519,58 +550,10 @@
            </layout>
           </item>
           <item>
-           <layout class="QHBoxLayout" name="UsernameHorizontalStack">
-            <item>
-             <widget class="QLabel" name="UsernameLabel">
-              <property name="minimumSize">
-               <size>
-                <width>100</width>
-                <height>0</height>
-               </size>
-              </property>
-              <property name="text">
-               <string>Username:</string>
-              </property>
-             </widget>
-            </item>
-            <item>
-             <widget class="QLineEdit" name="UsernameTextField">
-              <property name="placeholderText">
-               <string>Username</string>
-              </property>
-             </widget>
-            </item>
-           </layout>
-          </item>
-          <item>
-           <layout class="QHBoxLayout" name="PasswordHorizontalStack">
-            <item>
-             <widget class="QLabel" name="passwordLabel">
-              <property name="minimumSize">
-               <size>
-                <width>100</width>
-                <height>0</height>
-               </size>
-              </property>
-              <property name="text">
-               <string>Password:</string>
-              </property>
-             </widget>
-            </item>
-            <item>
-             <widget class="QLineEdit" name="passwordTextField">
-              <property name="echoMode">
-               <enum>QLineEdit::Password</enum>
-              </property>
-              <property name="placeholderText">
-               <string>Password</string>
-              </property>
-             </widget>
-            </item>
-           </layout>
-          </item>
-          <item>
            <widget class="QPushButton" name="connectToServerButton">
+            <property name="toolTip">
+             <string>Connect to a server.</string>
+            </property>
             <property name="text">
              <string>Connect</string>
             </property>
@@ -667,6 +650,9 @@
             </item>
             <item>
              <widget class="QPushButton" name="numberOfMessagesSetButton">
+              <property name="toolTip">
+               <string>Set maximum nuber of messages to store for a single topic.</string>
+              </property>
               <property name="text">
                <string>Set</string>
               </property>
@@ -793,12 +779,100 @@
             </item>
             <item>
              <widget class="QPushButton" name="exportButton">
+              <property name="toolTip">
+               <string>Export captured data to disk.</string>
+              </property>
               <property name="text">
                <string>Export</string>
               </property>
              </widget>
             </item>
            </layout>
+          </item>
+         </layout>
+        </item>
+        <item>
+         <spacer name="verticalSpacer_14">
+          <property name="orientation">
+           <enum>Qt::Vertical</enum>
+          </property>
+          <property name="sizeType">
+           <enum>QSizePolicy::Fixed</enum>
+          </property>
+          <property name="sizeHint" stdset="0">
+           <size>
+            <width>20</width>
+            <height>16</height>
+           </size>
+          </property>
+         </spacer>
+        </item>
+        <item>
+         <widget class="Line" name="line_4">
+          <property name="orientation">
+           <enum>Qt::Horizontal</enum>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <spacer name="verticalSpacer_13">
+          <property name="orientation">
+           <enum>Qt::Vertical</enum>
+          </property>
+          <property name="sizeType">
+           <enum>QSizePolicy::Fixed</enum>
+          </property>
+          <property name="sizeHint" stdset="0">
+           <size>
+            <width>20</width>
+            <height>8</height>
+           </size>
+          </property>
+         </spacer>
+        </item>
+        <item>
+         <layout class="QHBoxLayout" name="horizontalLayout_3">
+          <item>
+           <widget class="QLabel" name="simulatorLabel">
+            <property name="minimumSize">
+             <size>
+              <width>100</width>
+              <height>0</height>
+             </size>
+            </property>
+            <property name="text">
+             <string>Simulator:</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QPushButton" name="simulatorButton">
+            <property name="enabled">
+             <bool>false</bool>
+            </property>
+            <property name="text">
+             <string>Run</string>
+            </property>
+            <property name="checkable">
+             <bool>true</bool>
+            </property>
+            <property name="checked">
+             <bool>false</bool>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <spacer name="horizontalSpacer_2">
+            <property name="orientation">
+             <enum>Qt::Horizontal</enum>
+            </property>
+            <property name="sizeHint" stdset="0">
+             <size>
+              <width>40</width>
+              <height>20</height>
+             </size>
+            </property>
+           </spacer>
           </item>
          </layout>
         </item>

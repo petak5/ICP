@@ -12,7 +12,9 @@
 #include <QTreeWidgetItem>
 #include "valueinspectdialog.h"
 #include "mqtthandler.h"
+#include "simulator.h"
 #include <QDir>
+#include <QListWidgetItem>
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
@@ -66,6 +68,8 @@ private slots:
 
     void on_valueInspectButton_clicked();
 
+    void on_valueHistoryList_itemDoubleClicked(QListWidgetItem *item);
+
     void on_publishTextButton_clicked();
 
     void on_publishFileButton_clicked();
@@ -80,6 +84,8 @@ private slots:
 
     void on_exportButton_clicked();
 
+    void on_simulatorButton_clicked();
+
     void on_widgetAddButton_clicked();
 
     void on_widgetRemoveButton_clicked();
@@ -89,6 +95,7 @@ private:
     MqttHandler *mqttHandler = nullptr;
     QList<Topic *> topicsTree;
     int numberOfMessagesInHistory = 1;
+    Simulator *simulator = nullptr;
 
     QTreeWidgetItem * treeViewAddRootItem(QString name);
     QTreeWidgetItem * treeViewAddItem(QTreeWidgetItem *parent, QString name);
@@ -103,6 +110,8 @@ private:
     void messageDisplayHandler(mqtt::const_message_ptr msg, QWidget *interface);
     void messageTextHandler(mqtt::const_message_ptr msg, QWidget *interface);
     QWidget *getWidgetPtr(int index);
+
+    static void presentDialog(QString title, QString text);
 };
 
 #endif // MAINWINDOW_H

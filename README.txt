@@ -4,7 +4,9 @@ Autor: Peter Urgoš
 Dátum: 9.5.2021
 
 Nedostatky:
-  - Dashboard nie je implementovaný
+  - Odoslane a prijate spravy nie su vizuálne odlíšené
+  - Dashboard nie je 100% funkčný
+  - Simulátor nie je implementovaný
 
 Pouzite zdroje:
   - https://github.com/eclipse/paho.mqtt.cpp/blob/master/src/samples/async_subscribe.cpp
