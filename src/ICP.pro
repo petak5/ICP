@@ -18,8 +18,7 @@ SOURCES += \
     main.cpp \
     mainwindow.cpp \
     mqtthandler.cpp \
-    valueinspectdialog.cpp \
-    widgetfactory.cpp
+    valueinspectdialog.cpp
 
 HEADERS += \
     mainwindow.h \

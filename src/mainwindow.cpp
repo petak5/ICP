@@ -645,17 +645,27 @@ void MainWindow::on_widgetAddButton_clicked()
 
     ui->widgetRemoveBox->addItem(widgetName);
 
+    QWidget* interface;
+    for(int i=1; i <= 12; i++)
+    {
+        interface = getWidgetPtr(i);
+        if(interface->findChild<QWidget *>(QString(), Qt::FindDirectChildrenOnly) == nullptr)
+        {
+            break;
+        }
+    }
+
     if(widgetType == "Switch")
     {
-        createSwitch(getWidgetPtr(ui->widgetRemoveBox->count()), widgetName, widgetTopic);
+        createSwitch(interface, widgetName, widgetTopic);
     }
     else if(widgetType == "Display")
     {
-        createDisplay(getWidgetPtr(ui->widgetRemoveBox->count()), widgetName, widgetTopic);
+        createDisplay(interface, widgetName, widgetTopic);
     }
     else if(widgetType == "Text")
     {
-        createText(getWidgetPtr(ui->widgetRemoveBox->count()), widgetName, widgetTopic);
+        createText(interface, widgetName, widgetTopic);
     }
 }
 
@@ -685,7 +695,11 @@ void MainWindow::on_widgetRemoveButton_clicked()
         }
     }
     //doesnt remove layout, needs fix
+    QLayout *layout = interface->findChild<QLayout *>(QString(), Qt::FindDirectChildrenOnly);
+    qDeleteAll(layout->findChildren<QWidget *>(QString(), Qt::FindDirectChildrenOnly));
+    delete layout;
     qDeleteAll(interface->findChildren<QWidget *>(QString(), Qt::FindDirectChildrenOnly));
+
 
     ui->widgetRemoveBox->removeItem(ui->widgetRemoveBox->currentIndex());
 }
@@ -816,7 +830,7 @@ void MainWindow::createSwitch(QWidget* interface, QString name, QString topic)
     nameLabel->setText(name);
     nameLabel->setObjectName("widgetNameLabel");
 
-    QPixmap pixmap("../icons/light_switch.png");
+    QPixmap pixmap("../src/icons/light_switch.png");
     QLabel *icon = new QLabel("switch");
     icon->setPixmap(pixmap);
     icon->setAlignment(Qt::AlignHCenter);
