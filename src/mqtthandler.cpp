@@ -56,10 +56,9 @@ void callback::on_success(const mqtt::token& tok) {}
  * @param cause of connection
  */
 void callback::connected(const std::string& cause)
-{
-    client.subscribe("#", 0);
+{    
     client.subscribe("$SYS/#", 0);
-    client.unsubscribe("#");
+    client.subscribe("#", 0);
 }
 
 
