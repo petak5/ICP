@@ -20,18 +20,9 @@
 Topic::Topic(QString topic) : topic(topic) {}
 
 
-/**
- * @brief Get topic name
- * @return topic name
- */
 QString Topic::getTopic() { return topic; }
 
 
-/**
- * @brief Add message to topic
- * @param message to add
- * @param maxCount of messages stored
- */
 void Topic::addMessage(std::string message, int maxCount)
 {
     messages.append(new std::string(message));
@@ -41,11 +32,6 @@ void Topic::addMessage(std::string message, int maxCount)
 }
 
 
-/**
- * @brief Get all messages
- * @param maxCount of mesages stored
- * @return list of messages
- */
 QList<std::string *> &Topic::getMessages(int maxCount)
 {
     while (messages.length() > maxCount)
@@ -55,25 +41,12 @@ QList<std::string *> &Topic::getMessages(int maxCount)
 };
 
 
-/**
- * @brief Add topic to children
- * @param topic to add
- */
 void Topic::addChild(Topic *topic) { children.append(topic); }
 
 
-/**
- * @brief Get all children
- * @return list of children
- */
 QList<Topic *> &Topic::getChildren() { return children; }
 
 
-/**
- * @brief Find topic in the topics tree at the specified path
- * @param path is path to the topic in the tree
- * @return topic at specified path or nullptr if not found
- */
 Topic * Topic::findTopic(QStringList path)
 {
     if (path.length() == 0) return nullptr;
@@ -101,11 +74,6 @@ Topic * Topic::findTopic(QStringList path)
 }
 
 
-/**
- * @brief Add topic to tree, the location is determined by the topic attribute which is used as path in the tree
- * @param topic to add to topic's tree structure
- * @return the topic that was added to the tree
- */
 Topic * Topic::addTopic(Topic *topic)
 {
     auto path = topic->topic.split("/");
@@ -187,6 +155,7 @@ MainWindow::MainWindow(QWidget *parent)
 {
     ui->setupUi(this);
 
+    // Set validator for number of messages stored text field
     ui->numberOfMessagesTextField->setValidator(new QIntValidator(0, 100, this));
 }
 
@@ -198,11 +167,6 @@ MainWindow::~MainWindow()
 }
 
 
-/**
- * @brief Function that is called when new message is received in the Paho client callback, updates UI with the new message
- * @param topic is the topic of the message
- * @param message is the message's conetnt (payload)
- */
 void MainWindow::newMessage(QString topic, std::string payload)
 {
     auto topicPath = topic.split(QString("/"));
@@ -241,6 +205,8 @@ void MainWindow::newMessage(QString topic, std::string payload)
 
 
     // Append topics/subtopics to UI tree
+
+
     if (topicPath.length() > 0)
     {
         auto foundItems = ui->treeWidget->findItems(topicPath[0], Qt::MatchExactly);
@@ -275,16 +241,10 @@ void MainWindow::newMessage(QString topic, std::string payload)
     }
 }
 
-
 // -------- //
 // Tree tab //
 // -------- //
 
-/**
- * @brief Add root item to tree
- * @param title of the item
- * @return Root item that was created and added to the QTreeWidget
- */
 QTreeWidgetItem * MainWindow::treeViewAddRootItem(QString title)
 {
     auto rootItem = new QTreeWidgetItem(ui->treeWidget);
@@ -295,12 +255,6 @@ QTreeWidgetItem * MainWindow::treeViewAddRootItem(QString title)
 }
 
 
-/**
- * @brief Add item to the parent
- * @param parent to add item to
- * @param title of the item
- * @return The item that was created and added to the parent
- */
 QTreeWidgetItem * MainWindow::treeViewAddItem(QTreeWidgetItem *parent, QString title)
 {
     auto childItem = new QTreeWidgetItem(parent);
@@ -311,10 +265,6 @@ QTreeWidgetItem * MainWindow::treeViewAddItem(QTreeWidgetItem *parent, QString t
 }
 
 
-/**
- * @brief Get path to currently selected item in tree view
- * @return path to current item, empty path if not found
- */
 QStringList MainWindow::treeViewGetPathToCurrentItem()
 {
     // Get path from tree
@@ -334,11 +284,6 @@ QStringList MainWindow::treeViewGetPathToCurrentItem()
 }
 
 
-/**
- * @brief Find topic at the specified path in the topics tree structure
- * @param path is the path to the requested topic
- * @return topic at the path or nullptr if not found
- */
 Topic *MainWindow::treeViewFindTopic(QStringList path)
 {
     Topic *rootTopic = nullptr;
@@ -360,9 +305,6 @@ Topic *MainWindow::treeViewFindTopic(QStringList path)
 }
 
 
-/**
- * @brief Fills value history list with values related to the currently selected item in tree widget
- */
 void MainWindow::refreshValuesList()
 {
     ui->valueHistoryList->clear();
@@ -389,18 +331,12 @@ void MainWindow::refreshValuesList()
 }
 
 
-/**
- * @brief Update list when tree view selection changed
- */
 void MainWindow::on_treeWidget_itemSelectionChanged()
 {
     refreshValuesList();
 }
 
 
-/**
- * @brief Subscibe to a topic
- */
 void MainWindow::on_subscribeButton_clicked()
 {
     auto topic = ui->subscribeTopicTextField->text();
@@ -415,18 +351,12 @@ void MainWindow::on_subscribeButton_clicked()
 }
 
 
-/**
- * @brief Reset topic subscibtion to no topic (receive all topics)
- */
 void MainWindow::on_subscribeResetButton_clicked()
 {
     topicsFilter = "";
 }
 
 
-/**
- * @brief Inspect value in a modal window
- */
 void MainWindow::on_valueInspectButton_clicked()
 {
     auto selectedIndex = ui->valueHistoryList->currentIndex();
@@ -464,9 +394,6 @@ void MainWindow::on_valueHistoryList_itemDoubleClicked(QListWidgetItem *item)
 }
 
 
-/**
- * @brief Update displayed value when item from history is selected
- */
 void MainWindow::on_valueHistoryList_itemSelectionChanged()
 {
     auto item = ui->valueHistoryList->currentItem();
@@ -474,9 +401,6 @@ void MainWindow::on_valueHistoryList_itemSelectionChanged()
 }
 
 
-/**
- * @brief Publish text message to a topic
- */
 void MainWindow::on_publishTextButton_clicked()
 {
     auto topic = ui->publishTopicTextField->text();
@@ -497,9 +421,6 @@ void MainWindow::on_publishTextButton_clicked()
 }
 
 
-/**
- * @brief Publish file to a topic
- */
 void MainWindow::on_publishFileButton_clicked()
 {
     auto topic = ui->publishTopicTextField->text();
@@ -537,9 +458,6 @@ void MainWindow::on_publishFileButton_clicked()
 // Settings tab //
 // ------------ //
 
-/**
- * @brief Connect to or disconnect from server (MQTT broker)
- */
 void MainWindow::on_connectToServerButton_clicked()
 {
     if (mqttHandler == nullptr)
@@ -595,9 +513,6 @@ void MainWindow::on_connectToServerButton_clicked()
 }
 
 
-/**
- * @brief MainWindow::on_numberOfMessagesSetButton_clicked
- */
 void MainWindow::on_numberOfMessagesSetButton_clicked()
 {
     auto numberString = ui->numberOfMessagesTextField->text();
@@ -617,9 +532,6 @@ void MainWindow::on_numberOfMessagesSetButton_clicked()
 }
 
 
-/**
- * @brief Export captured data to disk
- */
 void MainWindow::on_exportButton_clicked()
 {
     auto directoryPath = ui->exportPathTextField->text().trimmed();
@@ -644,9 +556,7 @@ void MainWindow::on_exportButton_clicked()
     }
 }
 
-/**
- * @brief Run or stop simulator
- */
+
 void MainWindow::on_simulatorButton_clicked()
 {
     if (mqttHandler == nullptr)
@@ -669,14 +579,10 @@ void MainWindow::on_simulatorButton_clicked()
     }
 }
 
-
 //-----------//
 // Dashboard //
 //-----------//
 
-/**
-* @brief Adds dashboard widget with user defined name topic and type
-*/
 void MainWindow::on_widgetAddButton_clicked()
 {
     auto widgetName = ui->widgetNameText->text().trimmed();
@@ -756,9 +662,7 @@ void MainWindow::on_widgetAddButton_clicked()
     }
 }
 
-/**
- * @brief Removes dashboard widget defined in comboBox
- */
+
 void MainWindow::on_widgetRemoveButton_clicked()
 {
     if(ui->widgetRemoveBox->count() == 0 || ui->widgetRemoveBox->currentText().trimmed() == "")
@@ -793,9 +697,7 @@ void MainWindow::on_widgetRemoveButton_clicked()
     ui->widgetRemoveBox->removeItem(ui->widgetRemoveBox->currentIndex());
 }
 
-/**
- * @brief sends message to MQTT broker containing the opposite state of switch widget
- */
+
 void MainWindow::on_widgetSwitchButton_clicked()
 {
     QPushButton *button = qobject_cast<QPushButton *>(sender());
@@ -818,9 +720,7 @@ void MainWindow::on_widgetSwitchButton_clicked()
     mqttHandler->publishMessage(topic, newState.toStdString());
 }
 
-/**
- * @brief Sends message to MQTT broker contained in text field after signal from button
- */
+
 void MainWindow::on_widgetTextButton_clicked()
 {
     QPushButton *button = qobject_cast<QPushButton *>(sender());
@@ -844,10 +744,7 @@ void MainWindow::on_widgetTextButton_clicked()
     mqttHandler->publishMessage(topic, text.toStdString());
 }
 
-/**
- * @brief Forwards msg to all dashboard widgets with the same topic
- * @param msg message received from MQTT broker
- */
+
 void MainWindow::messageHandler(mqtt::const_message_ptr msg)
 {
     auto topic = QString().fromStdString(msg->get_topic());
@@ -889,11 +786,7 @@ void MainWindow::messageHandler(mqtt::const_message_ptr msg)
 
 }
 
-/**
- * @brief Returns pointer to dashboard widget container depeding on index
- * @param index index of widget container
- * @return pointer to widget container
- */
+
 QWidget *MainWindow::getWidgetPtr(int index)
 {
     switch(index)
@@ -927,12 +820,7 @@ QWidget *MainWindow::getWidgetPtr(int index)
     return nullptr;
 }
 
-/**
- * @brief Creates dashboard widget for displaying switch state in interface
- * @param interface pointer to widget container
- * @param name name of dashboard widget
- * @param topic topic that is received by widget
- */
+
 void MainWindow::createSwitch(QWidget* interface, QString name, QString topic)
 {
     QLabel *nameLabel = new QLabel(name);
@@ -968,12 +856,7 @@ void MainWindow::createSwitch(QWidget* interface, QString name, QString topic)
     layout->addWidget(id);
 }
 
-/**
- * @brief Creates dashboard widget for displaying number value in interface
- * @param interface pointer to widget container
- * @param name name of dashboard widget
- * @param topic topic that is received by widget
- */
+
 void MainWindow::createDisplay(QWidget *interface, QString name, QString topic)
 {
     QVBoxLayout *layout = new QVBoxLayout(interface);
@@ -1003,12 +886,7 @@ void MainWindow::createDisplay(QWidget *interface, QString name, QString topic)
     layout->addWidget(id);
 }
 
-/**
- * @brief Creates dashboard widget for displaying text in interface
- * @param interface pointer to widget container
- * @param name name of dashboard widget
- * @param topic topic that is received by widget
- */
+
 void MainWindow::createText(QWidget *interface, QString name, QString topic)
 {
     QLabel *nameLabel = new QLabel(name);
@@ -1044,11 +922,7 @@ void MainWindow::createText(QWidget *interface, QString name, QString topic)
     layout->setObjectName(topic);
 }
 
-/**
- * @brief Changes state of switch depending on received msg
- * @param msg message receiver from mqtt broker
- * @param interface pointer to widget container
- */
+
 void MainWindow::messageSwitchHandler(mqtt::const_message_ptr msg, QWidget *interface)
 {
     auto payload = msg->get_payload();
@@ -1057,11 +931,7 @@ void MainWindow::messageSwitchHandler(mqtt::const_message_ptr msg, QWidget *inte
     label->setText(QString().fromStdString(payload));
 }
 
-/**
- * @brief Displays value from msg to LCDnumber widget
- * @param msg message receiver from mqtt broker
- * @param interface pointer to widget container
- */
+
 void MainWindow::messageDisplayHandler(mqtt::const_message_ptr msg, QWidget *interface)
 {
     auto payload = msg->get_payload();
@@ -1070,11 +940,7 @@ void MainWindow::messageDisplayHandler(mqtt::const_message_ptr msg, QWidget *int
     display->display(QString().fromStdString(payload));
 }
 
-/**
- * @brief Appends msg payload to text area in widget determined by interface
- * @param msg message receiver from mqtt broker
- * @param interface pointer to widget container
- */
+
 void MainWindow::messageTextHandler(mqtt::const_message_ptr msg, QWidget *interface)
 {
     auto payload = msg->get_payload();
@@ -1084,11 +950,6 @@ void MainWindow::messageTextHandler(mqtt::const_message_ptr msg, QWidget *interf
 }
 
 
-/**
- * @brief Present a dialog
- * @param title of the dialog window
- * @param text of the dialgo window
- */
 void MainWindow::presentDialog(QString title, QString text)
 {
     QMessageBox dialog;

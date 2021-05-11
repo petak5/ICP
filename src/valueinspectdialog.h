@@ -21,6 +21,11 @@ class ValueInspectDialog : public QDialog
 public:
     explicit ValueInspectDialog(QWidget *parent = nullptr);
     ~ValueInspectDialog();
+
+    /**
+     * @brief Set message to be shown in the dialog, try to parse it as an image too
+     * @param message to show
+     */
     void setMessage(std::string message);
 
 private:
