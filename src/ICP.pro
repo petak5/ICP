@@ -18,7 +18,8 @@ SOURCES += \
     main.cpp \
     mainwindow.cpp \
     mqtthandler.cpp \
-    valueinspectdialog.cpp
+    valueinspectdialog.cpp \
+    widgetfactory.cpp
 
 HEADERS += \
     mainwindow.h \
@@ -33,3 +34,5 @@ FORMS += \
 qnx: target.path = /tmp/$${TARGET}/bin
 else: unix:!android: target.path = /opt/$${TARGET}/bin
 !isEmpty(target.path): INSTALLS += target
+
+RESOURCES +=

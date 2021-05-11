@@ -52,6 +52,9 @@ public:
 
     QString topicsFilter = "";
 
+public slots:
+    void on_widgetSwitchButton_clicked();
+
 private slots:
     void on_subscribeButton_clicked();
 
@@ -88,6 +91,9 @@ private:
     QStringList treeViewGetPathToCurrentItem();
     Topic *treeViewFindTopic(QStringList path);
     void refreshValuesList();
+
+    void createSwitch(QWidget *interface, QString name, QString topic);
+    QWidget *getEmptyWidget(int num);
 };
 
 #endif // MAINWINDOW_H

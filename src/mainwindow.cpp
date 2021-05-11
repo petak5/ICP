@@ -628,6 +628,7 @@ void MainWindow::on_widgetAddButton_clicked()
     }
 
     ui->widgetNameText->clear();
+    ui->widgetTopicText->clear();
 
     if(ui->widgetRemoveBox->findText(widgetName, Qt::MatchCaseSensitive|Qt::MatchExactly) != -1)
     {
@@ -643,6 +644,7 @@ void MainWindow::on_widgetAddButton_clicked()
     ui->widgetRemoveBox->addItem(widgetName);
 
     //TO DO: create widget
+    createSwitch(getEmptyWidget(ui->widgetRemoveBox->count()), widgetName, widgetTopic);
 }
 
 
@@ -662,5 +664,10 @@ void MainWindow::on_widgetRemoveButton_clicked()
     ui->widgetRemoveBox->removeItem(ui->widgetRemoveBox->currentIndex());
 
     //TO DO: remove widget
+}
+
+void MainWindow::on_widgetSwitchButton_clicked()
+{
+    ui->widgetAddButton->setText("haahaha");
 }
 
