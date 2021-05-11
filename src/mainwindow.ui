@@ -67,7 +67,10 @@
             <item>
              <widget class="QPushButton" name="subscribeButton">
               <property name="enabled">
-               <bool>false</bool>
+               <bool>true</bool>
+              </property>
+              <property name="toolTip">
+               <string>Subscribe to specified topic.</string>
               </property>
               <property name="text">
                <string>Subscribe</string>
@@ -77,7 +80,10 @@
             <item>
              <widget class="QPushButton" name="subscribeResetButton">
               <property name="enabled">
-               <bool>false</bool>
+               <bool>true</bool>
+              </property>
+              <property name="toolTip">
+               <string>Listen to all topics.</string>
               </property>
               <property name="text">
                <string>Reset</string>
@@ -142,6 +148,9 @@
             </item>
             <item>
              <widget class="QPushButton" name="valueInspectButton">
+              <property name="toolTip">
+               <string>Inspect value in a more detailed dialog.</string>
+              </property>
               <property name="text">
                <string>Inspect value</string>
               </property>
@@ -245,6 +254,9 @@
               <property name="enabled">
                <bool>false</bool>
               </property>
+              <property name="toolTip">
+               <string>Publish text message to specified topic.</string>
+              </property>
               <property name="text">
                <string>Publish text</string>
               </property>
@@ -271,6 +283,9 @@
              <widget class="QPushButton" name="publishFileButton">
               <property name="enabled">
                <bool>false</bool>
+              </property>
+              <property name="toolTip">
+               <string>Publish file from specified path to topic.</string>
               </property>
               <property name="text">
                <string>Publish file</string>
@@ -505,6 +520,9 @@
           </item>
           <item>
            <widget class="QPushButton" name="connectToServerButton">
+            <property name="toolTip">
+             <string>Connect to server.</string>
+            </property>
             <property name="text">
              <string>Connect</string>
             </property>
@@ -601,6 +619,9 @@
             </item>
             <item>
              <widget class="QPushButton" name="numberOfMessagesSetButton">
+              <property name="toolTip">
+               <string>Set maximum nuber of messages to store for a single topic.</string>
+              </property>
               <property name="text">
                <string>Set</string>
               </property>
@@ -727,6 +748,9 @@
             </item>
             <item>
              <widget class="QPushButton" name="exportButton">
+              <property name="toolTip">
+               <string>Export captured data to disk.</string>
+              </property>
               <property name="text">
                <string>Export</string>
               </property>

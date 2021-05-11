@@ -14,6 +14,7 @@
 #include "mqtthandler.h"
 #include "simulator.h"
 #include <QDir>
+#include <QListWidgetItem>
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
@@ -59,6 +60,8 @@ private slots:
     void on_subscribeResetButton_clicked();
 
     void on_valueInspectButton_clicked();
+
+    void on_valueHistoryList_itemDoubleClicked(QListWidgetItem *item);
 
     void on_publishTextButton_clicked();
 

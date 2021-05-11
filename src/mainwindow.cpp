@@ -11,6 +11,7 @@
 #include <limits>
 #include <QFile>
 #include <QMessageBox>
+#include <QThread>
 
 Topic::Topic(QString topic) : topic(topic) {}
 
@@ -201,6 +202,8 @@ MainWindow::~MainWindow()
 void MainWindow::newMessage(QString topic, std::string payload)
 {
     auto topicPath = topic.split(QString("/"));
+    if (topicPath.length() <= 0)
+        return;
 
     int topicsRowIndex = -1;
     for (int i = 0; i < topicsTree.length(); i++)
@@ -378,11 +381,12 @@ void MainWindow::refreshValuesList()
 
     ui->valueHistoryList->addItems(values);
 
-    // Select the first item
-    ui->valueHistoryList->clearSelection();
-    auto firstItem = ui->valueHistoryList->item(0);
-    if (firstItem != nullptr)
-        ui->valueHistoryList->setCurrentItem(firstItem);
+    QThread::msleep(20);
+
+    /*
+     * QUrl url = QUrl::fromUserInput(usertext);
+    if (checkUrl(url))
+    */
 }
 
 
@@ -424,6 +428,8 @@ void MainWindow::on_subscribeResetButton_clicked()
 void MainWindow::on_valueInspectButton_clicked()
 {
     auto selectedIndex = ui->valueHistoryList->currentIndex();
+    if (!selectedIndex.isValid())
+        return;
 
     auto itemPath = treeViewGetPathToCurrentItem();
     if (itemPath.empty())
@@ -444,6 +450,12 @@ void MainWindow::on_valueInspectButton_clicked()
     auto dialog = new ValueInspectDialog();
     dialog->setMessage(*message);
     dialog->exec();
+}
+
+
+void MainWindow::on_valueHistoryList_itemDoubleClicked(QListWidgetItem *item)
+{
+    on_valueInspectButton_clicked();
 }
 
 
@@ -525,8 +537,6 @@ void MainWindow::on_connectToServerButton_clicked()
         {
             ui->connectToServerButton->setText("Disconnect");
 
-            ui->subscribeButton->setEnabled(true);
-            ui->subscribeResetButton->setEnabled(true);
             ui->publishTextButton->setEnabled(true);
             ui->publishFileButton->setEnabled(true);
             ui->simulatorButton->setEnabled(true);
@@ -543,9 +553,6 @@ void MainWindow::on_connectToServerButton_clicked()
             simulator->stop();
         ui->simulatorButton->setChecked(false);
         ui->simulatorButton->setText("Run");
-
-        ui->subscribeButton->setEnabled(false);
-        ui->subscribeResetButton->setEnabled(false);
         ui->publishTextButton->setEnabled(false);
         ui->publishFileButton->setEnabled(false);
         ui->simulatorButton->setEnabled(false);
