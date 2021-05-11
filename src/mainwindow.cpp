@@ -567,6 +567,9 @@ void MainWindow::on_numberOfMessagesSetButton_clicked()
 }
 
 
+/**
+ * @brief Export captured data to disk
+ */
 void MainWindow::on_exportButton_clicked()
 {
     auto directoryPath = ui->exportPathTextField->text().trimmed();
@@ -593,6 +596,9 @@ void MainWindow::on_exportButton_clicked()
 }
 
 
+/**
+ * @brief Run or stop simulator
+ */
 void MainWindow::on_simulatorButton_clicked()
 {
     if (mqttHandler == nullptr)

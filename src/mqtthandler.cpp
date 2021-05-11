@@ -125,6 +125,7 @@ callback::callback(mqtt::async_client& cli, mqtt::connect_options& connOpts, Mai
  * @brief Handler for MQTT interaction
  * @param address of the MQTT broker
  * @param port of the MQTT broker
+ * @param clientId for the MQTT client
  * @param mainWindow is pointer to Main Window in which a callback function is called when message is received
  */
 MqttHandler::MqttHandler(QString address, QString port, QString clientId, MainWindow *mainWindow)
