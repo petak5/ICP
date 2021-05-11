@@ -78,6 +78,8 @@ void callback::connection_lost(const std::string& cause)
  */
 void callback::message_arrived(mqtt::const_message_ptr msg)
 {
+    mainWindow->messageHandler(msg);
+
     if (!mainWindow->topicsFilter.isEmpty())
     {
         // Process message only if the topic is accepted

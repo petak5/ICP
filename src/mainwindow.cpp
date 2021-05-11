@@ -587,7 +587,7 @@ void MainWindow::on_exportButton_clicked()
     }
 }
 
-
+//TO DO: subsribe to topic if not subscribed
 void MainWindow::on_widgetAddButton_clicked()
 {
     auto widgetName = ui->widgetNameText->text().trimmed();
@@ -643,7 +643,6 @@ void MainWindow::on_widgetAddButton_clicked()
 
     ui->widgetRemoveBox->addItem(widgetName);
 
-    //TO DO: create widget
     if(widgetType == "Switch")
     {
         createSwitch(getWidgetPtr(ui->widgetRemoveBox->count()), widgetName, widgetTopic);

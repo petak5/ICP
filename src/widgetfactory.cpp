@@ -9,80 +9,163 @@
 
 void MainWindow::createSwitch(QWidget* interface, QString name, QString topic)
 {
-    QLabel *nameLabel = new QLabel(name, interface, Qt::Widget);
+    QLabel *nameLabel = new QLabel(name);
     nameLabel->setAlignment(Qt::AlignHCenter);
     nameLabel->setText(name);
 
     QPixmap pixmap("../icons/light_switch.png");
-    QLabel *icon = new QLabel("switch", interface, Qt::Widget);
+    QLabel *icon = new QLabel("switch");
     icon->setPixmap(pixmap);
     icon->setAlignment(Qt::AlignHCenter);
 
-    QLabel *status = new QLabel("OFF", interface, Qt::Widget);
+    QLabel *status = new QLabel("OFF");
     status->setAlignment(Qt::AlignHCenter);
     status->setText("OFF");
     status->setObjectName("widgetSwitchStatusText");
 
-    QPushButton * button = new QPushButton("Switch", interface);
+    QPushButton * button = new QPushButton("Switch");
     button->show();
     button->setObjectName("widgetSwitchButton");
     connect(button, &QPushButton::clicked, this, &MainWindow::on_widgetSwitchButton_clicked);
 
+    QLabel *id = new QLabel("switch");
+    id->setVisible(false);
+    id->setObjectName("widgetID");
 
     QVBoxLayout *layout = new QVBoxLayout(interface);
     layout->addWidget(nameLabel);
     layout->addWidget(icon);
     layout->addWidget(status);
     layout->addWidget(button);
+    layout->setObjectName(topic);
+    layout->addWidget(id);
 }
 
 void MainWindow::createDisplay(QWidget *interface, QString name, QString topic)
 {
-    QLabel *nameLabel = new QLabel(name, interface, Qt::Widget);
+    QVBoxLayout *layout = new QVBoxLayout(interface);
+
+    QLabel *nameLabel = new QLabel(name);
     nameLabel->setAlignment(Qt::AlignHCenter);
     nameLabel->setText(name);
 
-    QLCDNumber *display =  new QLCDNumber(4, interface);
+    QLCDNumber *display =  new QLCDNumber(10);
     display->setDecMode();
     display->setSmallDecimalPoint(true);
     display->show();
-    display->setObjectName("widgetTemperatureDisplay");
+    display->setObjectName("widgetDisplay");
     display->display(42.42);
 
     QSizePolicy policy(QSizePolicy::Preferred, QSizePolicy::Preferred);
     display->setSizePolicy(policy);
 
-    QVBoxLayout *layout = new QVBoxLayout(interface);
+    QLabel *id = new QLabel("display");
+    id->setVisible(false);
+    id->setObjectName("widgetID");
+
     layout->addWidget(nameLabel);
     layout->addWidget(display);
+    layout->setObjectName(topic);
+    layout->addWidget(id);
 }
 
 void MainWindow::createText(QWidget *interface, QString name, QString topic)
 {
-    QLabel *nameLabel = new QLabel(name, interface, Qt::Widget);
+    QLabel *nameLabel = new QLabel(name);
     nameLabel->setAlignment(Qt::AlignHCenter);
     nameLabel->setText(name);
 
-    QScrollArea *scroll = new QScrollArea(interface);
-    scroll->autoFillBackground();
-    scroll->setObjectName("widgetTextScrollArea");
+    QTextEdit *display = new QTextEdit();
+    display->setReadOnly(true);
+    display->setObjectName("widgetTextScrollArea");
 
     QSizePolicy policy(QSizePolicy::Preferred, QSizePolicy::Preferred);
-    scroll->setSizePolicy(policy);
+    display->setSizePolicy(policy);
 
-    QPushButton * button = new QPushButton("Send", interface);
+    QPushButton * button = new QPushButton("Send");
     button->show();
     button->setObjectName("widgetTextButton");
     connect(button, &QPushButton::clicked, this, &MainWindow::on_widgetTextButton_clicked);
 
-    QLineEdit *text = new QLineEdit(interface);
+    QLineEdit *text = new QLineEdit();
     text->setObjectName("widgetTextAddText");
+
+    QLabel *id = new QLabel("switch");
+    id->setVisible(false);
+    id->setObjectName("widgetID");
 
     QGridLayout *layout = new QGridLayout(interface);
     layout->addWidget(nameLabel, 1, 1, 1, 2, Qt::AlignHCenter);
-    layout->addWidget(scroll, 2, 1, 1, 2, Qt::AlignHCenter);
+    layout->addWidget(display, 2, 1, 1, 2, Qt::AlignHCenter);
     layout->addWidget(text, 3, 1, 1, 1, Qt::AlignLeft);
     layout->addWidget(button, 3, 2, 1, 1, Qt::AlignRight);
+    layout->addWidget(id);
+    layout->setObjectName(topic);
+}
+
+void MainWindow::messageHandler(mqtt::const_message_ptr msg)
+{
+    auto topic = QString().fromStdString(msg->get_topic());
+    std::vector<QWidget *> interfaces;
+    QWidget *widget;
+    QLabel *label;
+
+    for(int i=1; i <= 12 ; i++)
+    {
+        widget = getWidgetPtr(i)->findChild<QWidget *>(topic, Qt::FindDirectChildrenOnly);
+        if(widget != nullptr)
+        {
+            interfaces.push_back(widget);
+        }
+    }
+
+    if(interfaces.size() == 0)
+    {
+        return;
+    }
+
+    for(auto tmp : interfaces)
+    {
+        label = tmp->findChild<QLabel *>("widgetID", Qt::FindDirectChildrenOnly);
+
+        if(label->text() == "switch")
+        {
+            messageSwitchHandler(msg, tmp);
+        }
+        else if(label->text() == "display")
+        {
+            messageDisplayHandler(msg, tmp);
+        }
+        else if(label->text() == "text")
+        {
+            messageTextHandler(msg, tmp);
+        }
+    }
+
+}
+
+void MainWindow::messageSwitchHandler(mqtt::const_message_ptr msg, QWidget *interface)
+{
+    auto payload = msg->get_payload();
+    QLabel *label = interface->findChild<QLabel *>("widgetSwitchStatusText");
+
+    label->setText(QString().fromStdString(payload));
+}
+
+void MainWindow::messageDisplayHandler(mqtt::const_message_ptr msg, QWidget *interface)
+{
+    auto payload = msg->get_payload();
+    QLCDNumber* display = interface->findChild<QLCDNumber *>("widgetDisplay");
+
+    display->display(QString().fromStdString(payload));
+}
+
+void MainWindow::messageTextHandler(mqtt::const_message_ptr msg, QWidget *interface)
+{
+    auto payload = msg->get_payload();
+    QTextEdit *text = interface->findChild<QTextEdit *>("widgetTextScrollArea");
+
+    text->append(QString().fromStdString(payload));
 }
 
 QWidget *MainWindow::getWidgetPtr(int index)

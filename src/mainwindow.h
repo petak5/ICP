@@ -52,6 +52,8 @@ public:
 
     QString topicsFilter = "";
 
+    void messageHandler(mqtt::const_message_ptr msg);
+
 public slots:
     void on_widgetSwitchButton_clicked();
 
@@ -97,6 +99,9 @@ private:
     void createSwitch(QWidget *interface, QString name, QString topic);
     void createDisplay(QWidget *interface, QString name, QString topic);
     void createText(QWidget *interface, QString name, QString topic);
+    void messageSwitchHandler(mqtt::const_message_ptr msg, QWidget *interface);
+    void messageDisplayHandler(mqtt::const_message_ptr msg, QWidget *interface);
+    void messageTextHandler(mqtt::const_message_ptr msg, QWidget *interface);
     QWidget *getWidgetPtr(int index);
 };
 
