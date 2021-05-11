@@ -18,7 +18,7 @@ doc:
 	cd src/ && doxygen
 
 pack:
-	zip -r 1-xurgos00.zip Makefile README.txt $(SRC) examples/
+	zip -r 1-xurgos00-xkluci01.zip Makefile README.txt $(SRC) examples/
 
 pre_req:
 	mkdir -p $(BUILD) && cd $(BUILD) && qmake ../$(SRC)

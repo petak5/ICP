@@ -1,14 +1,15 @@
 MQTT Explorer
 
-Autor: Peter Urgoš
+Autor: Peter Urgoš (xurgos00)
+Autor: Adam Kľučiar (xkluci01)
 Dátum: 9.5.2021
 
 Nedostatky:
-  - Odoslane a prijate spravy nie su vizuálne odlíšené
-  - Dashboard nie je 100% funkčný
+  - Odoslané a prijaté správy nie su vizuálne odlíšené v exploreri
+  - Dashboard nie je kompletne funkčný
   - Simulátor nie je implementovaný
 
-Pouzite zdroje:
+Použité zdroje:
   - https://github.com/eclipse/paho.mqtt.cpp/blob/master/src/samples/async_subscribe.cpp
   - https://www.eclipse.org/paho/files/cppdoc/classmqtt_1_1callback.html
   - https://www.eclipse.org/paho/files/cppdoc/classmqtt_1_1iaction__listener.html
