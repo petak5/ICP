@@ -58,6 +58,8 @@ void callback::on_success(const mqtt::token& tok) {}
 void callback::connected(const std::string& cause)
 {
     client.subscribe("#", 0);
+    client.subscribe("$SYS/#", 0);
+    client.unsubscribe("#");
 }
 
 
@@ -135,6 +137,8 @@ MqttHandler::MqttHandler(QString address, QString port, QString clientId, MainWi
     this->port = port;
 
     client.set_callback(cb);
+
+    connOpts.set_clean_session(true);
 
     try {
         client.connect(connOpts, nullptr, cb);

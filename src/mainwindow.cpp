@@ -187,7 +187,8 @@ MainWindow::MainWindow(QWidget *parent)
 
 MainWindow::~MainWindow()
 {
-    simulator->stop();
+    if (simulator != nullptr)
+        simulator->stop();
     delete ui;
 }
 
@@ -538,7 +539,8 @@ void MainWindow::on_connectToServerButton_clicked()
 
         ui->connectToServerButton->setText("Connect");
 
-        simulator->stop();
+        if (simulator != nullptr)
+            simulator->stop();
         ui->simulatorButton->setChecked(false);
         ui->simulatorButton->setText("Run");
 
