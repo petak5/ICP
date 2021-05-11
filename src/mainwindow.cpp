@@ -172,9 +172,9 @@ void Topic::exportToDisk(QDir directory)
     }
 }
 
-
-// Main Window
-
+//-------------//
+// Main Window //
+//-------------//
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -187,6 +187,7 @@ MainWindow::MainWindow(QWidget *parent)
 
 MainWindow::~MainWindow()
 {
+    simulator->stop();
     delete ui;
 }
 
@@ -514,12 +515,10 @@ void MainWindow::on_connectToServerButton_clicked()
     {
         auto address = ui->AddressTextField->text();
         auto port = ui->PortTextField->text();
-        auto username = ui->UsernameTextField->text();
-        auto password = ui->passwordTextField->text();
 
         if (address.isEmpty() || port.isEmpty()) return;
 
-        mqttHandler = new MqttHandler(address, port, this);
+        mqttHandler = new MqttHandler(address, port, "xurgos00_ICP_explorer", this);
 
         if (mqttHandler != nullptr)
         {
@@ -529,6 +528,7 @@ void MainWindow::on_connectToServerButton_clicked()
             ui->subscribeResetButton->setEnabled(true);
             ui->publishTextButton->setEnabled(true);
             ui->publishFileButton->setEnabled(true);
+            ui->simulatorButton->setEnabled(true);
         }
     }
     else
@@ -538,10 +538,15 @@ void MainWindow::on_connectToServerButton_clicked()
 
         ui->connectToServerButton->setText("Connect");
 
+        simulator->stop();
+        ui->simulatorButton->setChecked(false);
+        ui->simulatorButton->setText("Run");
+
         ui->subscribeButton->setEnabled(false);
         ui->subscribeResetButton->setEnabled(false);
         ui->publishTextButton->setEnabled(false);
         ui->publishFileButton->setEnabled(false);
+        ui->simulatorButton->setEnabled(false);
     }
 }
 
@@ -587,6 +592,33 @@ void MainWindow::on_exportButton_clicked()
     }
 }
 
+
+void MainWindow::on_simulatorButton_clicked()
+{
+    if (mqttHandler == nullptr)
+        return;
+
+    if (simulator == nullptr)
+        simulator = new Simulator(mqttHandler->getAddress(), mqttHandler->getPort(), "xurgos00_ICP_simulator");
+
+    auto doSimulate = ui->simulatorButton->isChecked();
+
+    if (doSimulate)
+    {
+        simulator->run();
+        ui->simulatorButton->setText("Stop");
+    }
+    else
+    {
+        simulator->stop();
+        ui->simulatorButton->setText("Run");
+    }
+}
+
+
+//-----------//
+// Dashboard //
+//-----------//
 
 void MainWindow::on_widgetAddButton_clicked()
 {

@@ -18,11 +18,13 @@ SOURCES += \
     main.cpp \
     mainwindow.cpp \
     mqtthandler.cpp \
+    simulator.cpp \
     valueinspectdialog.cpp
 
 HEADERS += \
     mainwindow.h \
     mqtthandler.h \
+    simulator.h \
     valueinspectdialog.h
 
 FORMS += \

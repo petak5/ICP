@@ -78,6 +78,9 @@ void callback::connection_lost(const std::string& cause)
  */
 void callback::message_arrived(mqtt::const_message_ptr msg)
 {
+    if (mainWindow == nullptr)
+        return;
+
     if (!mainWindow->topicsFilter.isEmpty())
     {
         // Process message only if the topic is accepted
@@ -124,9 +127,12 @@ callback::callback(mqtt::async_client& cli, mqtt::connect_options& connOpts, Mai
  * @param port of the MQTT broker
  * @param mainWindow is pointer to Main Window in which a callback function is called when message is received
  */
-MqttHandler::MqttHandler(QString address, QString port, MainWindow *mainWindow)
-    : client(address.append(":").append(port).toStdString(), "ICP_project"), cb(client, connOpts, mainWindow)
+MqttHandler::MqttHandler(QString address, QString port, QString clientId, MainWindow *mainWindow)
+    : client(QString(address).append(":").append(port).toStdString(), clientId.toStdString()), cb(client, connOpts, mainWindow)
 {
+    this->address = address;
+    this->port = port;
+
     client.set_callback(cb);
 
     try {
@@ -153,4 +159,10 @@ void MqttHandler::publishMessage(QString topic, std::string message)
         std::cerr << "Error: " << exc.what() << std::endl;
     }
 }
+
+
+QString MqttHandler::getAddress() { return this->address; }
+
+
+QString MqttHandler::getPort() { return this->port; }
 

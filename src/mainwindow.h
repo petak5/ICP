@@ -12,6 +12,7 @@
 #include <QTreeWidgetItem>
 #include "valueinspectdialog.h"
 #include "mqtthandler.h"
+#include "simulator.h"
 #include <QDir>
 
 QT_BEGIN_NAMESPACE
@@ -73,6 +74,8 @@ private slots:
 
     void on_exportButton_clicked();
 
+    void on_simulatorButton_clicked();
+
     void on_widgetAddButton_clicked();
 
     void on_widgetRemoveButton_clicked();
@@ -82,6 +85,7 @@ private:
     MqttHandler *mqttHandler = nullptr;
     QList<Topic *> topicsTree;
     int numberOfMessagesInHistory = 1;
+    Simulator *simulator = nullptr;
 
     QTreeWidgetItem * treeViewAddRootItem(QString name);
     QTreeWidgetItem * treeViewAddItem(QTreeWidgetItem *parent, QString name);
