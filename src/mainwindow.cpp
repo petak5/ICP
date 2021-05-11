@@ -644,13 +644,6 @@ void MainWindow::on_exportButton_clicked()
     }
 }
 
-<<<<<<< HEAD
-/**
- * @brief Adds dashboard widget with user defined name topic and type
- */
-=======
-//TO DO: subsribe to topic if not subscribed
-
 /**
  * @brief Run or stop simulator
  */
@@ -681,7 +674,9 @@ void MainWindow::on_simulatorButton_clicked()
 // Dashboard //
 //-----------//
 
->>>>>>> e226f0097ae5a166a961c8c5b6a6a936479a6549
+/**
+* @brief Adds dashboard widget with user defined name topic and type
+*/
 void MainWindow::on_widgetAddButton_clicked()
 {
     auto widgetName = ui->widgetNameText->text().trimmed();
@@ -798,13 +793,9 @@ void MainWindow::on_widgetRemoveButton_clicked()
     ui->widgetRemoveBox->removeItem(ui->widgetRemoveBox->currentIndex());
 }
 
-<<<<<<< HEAD
 /**
  * @brief sends message to MQTT broker containing the opposite state of switch widget
  */
-=======
-
->>>>>>> e226f0097ae5a166a961c8c5b6a6a936479a6549
 void MainWindow::on_widgetSwitchButton_clicked()
 {
     QPushButton *button = qobject_cast<QPushButton *>(sender());
@@ -827,13 +818,9 @@ void MainWindow::on_widgetSwitchButton_clicked()
     mqttHandler->publishMessage(topic, newState.toStdString());
 }
 
-<<<<<<< HEAD
 /**
  * @brief Sends message to MQTT broker contained in text field after signal from button
  */
-=======
-
->>>>>>> e226f0097ae5a166a961c8c5b6a6a936479a6549
 void MainWindow::on_widgetTextButton_clicked()
 {
     QPushButton *button = qobject_cast<QPushButton *>(sender());
@@ -857,14 +844,10 @@ void MainWindow::on_widgetTextButton_clicked()
     mqttHandler->publishMessage(topic, text.toStdString());
 }
 
-<<<<<<< HEAD
 /**
  * @brief Forwards msg to all dashboard widgets with the same topic
  * @param msg message received from MQTT broker
  */
-=======
-
->>>>>>> e226f0097ae5a166a961c8c5b6a6a936479a6549
 void MainWindow::messageHandler(mqtt::const_message_ptr msg)
 {
     auto topic = QString().fromStdString(msg->get_topic());
@@ -906,15 +889,11 @@ void MainWindow::messageHandler(mqtt::const_message_ptr msg)
 
 }
 
-<<<<<<< HEAD
 /**
  * @brief Returns pointer to dashboard widget container depeding on index
  * @param index index of widget container
  * @return pointer to widget container
  */
-=======
-
->>>>>>> e226f0097ae5a166a961c8c5b6a6a936479a6549
 QWidget *MainWindow::getWidgetPtr(int index)
 {
     switch(index)
@@ -948,16 +927,12 @@ QWidget *MainWindow::getWidgetPtr(int index)
     return nullptr;
 }
 
-<<<<<<< HEAD
 /**
  * @brief Creates dashboard widget for displaying switch state in interface
  * @param interface pointer to widget container
  * @param name name of dashboard widget
  * @param topic topic that is received by widget
  */
-=======
-
->>>>>>> e226f0097ae5a166a961c8c5b6a6a936479a6549
 void MainWindow::createSwitch(QWidget* interface, QString name, QString topic)
 {
     QLabel *nameLabel = new QLabel(name);
@@ -993,16 +968,12 @@ void MainWindow::createSwitch(QWidget* interface, QString name, QString topic)
     layout->addWidget(id);
 }
 
-<<<<<<< HEAD
 /**
  * @brief Creates dashboard widget for displaying number value in interface
  * @param interface pointer to widget container
  * @param name name of dashboard widget
  * @param topic topic that is received by widget
  */
-=======
-
->>>>>>> e226f0097ae5a166a961c8c5b6a6a936479a6549
 void MainWindow::createDisplay(QWidget *interface, QString name, QString topic)
 {
     QVBoxLayout *layout = new QVBoxLayout(interface);
@@ -1032,16 +1003,12 @@ void MainWindow::createDisplay(QWidget *interface, QString name, QString topic)
     layout->addWidget(id);
 }
 
-<<<<<<< HEAD
 /**
  * @brief Creates dashboard widget for displaying text in interface
  * @param interface pointer to widget container
  * @param name name of dashboard widget
  * @param topic topic that is received by widget
  */
-=======
-
->>>>>>> e226f0097ae5a166a961c8c5b6a6a936479a6549
 void MainWindow::createText(QWidget *interface, QString name, QString topic)
 {
     QLabel *nameLabel = new QLabel(name);
@@ -1077,15 +1044,11 @@ void MainWindow::createText(QWidget *interface, QString name, QString topic)
     layout->setObjectName(topic);
 }
 
-<<<<<<< HEAD
 /**
  * @brief Changes state of switch depending on received msg
  * @param msg message receiver from mqtt broker
  * @param interface pointer to widget container
  */
-=======
-
->>>>>>> e226f0097ae5a166a961c8c5b6a6a936479a6549
 void MainWindow::messageSwitchHandler(mqtt::const_message_ptr msg, QWidget *interface)
 {
     auto payload = msg->get_payload();
@@ -1094,15 +1057,11 @@ void MainWindow::messageSwitchHandler(mqtt::const_message_ptr msg, QWidget *inte
     label->setText(QString().fromStdString(payload));
 }
 
-<<<<<<< HEAD
 /**
  * @brief Displays value from msg to LCDnumber widget
  * @param msg message receiver from mqtt broker
  * @param interface pointer to widget container
  */
-=======
-
->>>>>>> e226f0097ae5a166a961c8c5b6a6a936479a6549
 void MainWindow::messageDisplayHandler(mqtt::const_message_ptr msg, QWidget *interface)
 {
     auto payload = msg->get_payload();
@@ -1111,15 +1070,11 @@ void MainWindow::messageDisplayHandler(mqtt::const_message_ptr msg, QWidget *int
     display->display(QString().fromStdString(payload));
 }
 
-<<<<<<< HEAD
 /**
  * @brief Appends msg payload to text area in widget determined by interface
  * @param msg message receiver from mqtt broker
  * @param interface pointer to widget container
  */
-=======
-
->>>>>>> e226f0097ae5a166a961c8c5b6a6a936479a6549
 void MainWindow::messageTextHandler(mqtt::const_message_ptr msg, QWidget *interface)
 {
     auto payload = msg->get_payload();
