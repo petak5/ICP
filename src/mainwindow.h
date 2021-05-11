@@ -95,6 +95,7 @@ private:
     QStringList treeViewGetPathToCurrentItem();
     Topic *treeViewFindTopic(QStringList path);
     void refreshValuesList();
+    static void presentDialog(QString title, QString text);
 };
 
 #endif // MAINWINDOW_H
