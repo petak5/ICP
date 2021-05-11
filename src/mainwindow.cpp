@@ -644,7 +644,18 @@ void MainWindow::on_widgetAddButton_clicked()
     ui->widgetRemoveBox->addItem(widgetName);
 
     //TO DO: create widget
-    createSwitch(getEmptyWidget(ui->widgetRemoveBox->count()), widgetName, widgetTopic);
+    if(widgetType == "Switch")
+    {
+        createSwitch(getWidgetPtr(ui->widgetRemoveBox->count()), widgetName, widgetTopic);
+    }
+    else if(widgetType == "Display")
+    {
+        createDisplay(getWidgetPtr(ui->widgetRemoveBox->count()), widgetName, widgetTopic);
+    }
+    else if(widgetType == "Text")
+    {
+        createText(getWidgetPtr(ui->widgetRemoveBox->count()), widgetName, widgetTopic);
+    }
 }
 
 
@@ -669,5 +680,10 @@ void MainWindow::on_widgetRemoveButton_clicked()
 void MainWindow::on_widgetSwitchButton_clicked()
 {
     ui->widgetAddButton->setText("haahaha");
+}
+
+void MainWindow::on_widgetTextButton_clicked()
+{
+    ui->widgetNameText->setText("testt");
 }
 

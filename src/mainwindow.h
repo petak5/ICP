@@ -55,6 +55,8 @@ public:
 public slots:
     void on_widgetSwitchButton_clicked();
 
+    void on_widgetTextButton_clicked();
+
 private slots:
     void on_subscribeButton_clicked();
 
@@ -93,7 +95,9 @@ private:
     void refreshValuesList();
 
     void createSwitch(QWidget *interface, QString name, QString topic);
-    QWidget *getEmptyWidget(int num);
+    void createDisplay(QWidget *interface, QString name, QString topic);
+    void createText(QWidget *interface, QString name, QString topic);
+    QWidget *getWidgetPtr(int index);
 };
 
 #endif // MAINWINDOW_H

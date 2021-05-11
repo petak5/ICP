@@ -5,6 +5,7 @@
 #include <QtWidgets>
 #include <QTranslator>
 #include "ui_mainwindow.h"
+#include <QSizePolicy>
 
 void MainWindow::createSwitch(QWidget* interface, QString name, QString topic)
 {
@@ -35,9 +36,58 @@ void MainWindow::createSwitch(QWidget* interface, QString name, QString topic)
     layout->addWidget(button);
 }
 
-QWidget *MainWindow::getEmptyWidget(int num)
+void MainWindow::createDisplay(QWidget *interface, QString name, QString topic)
 {
-    switch(num)
+    QLabel *nameLabel = new QLabel(name, interface, Qt::Widget);
+    nameLabel->setAlignment(Qt::AlignHCenter);
+    nameLabel->setText(name);
+
+    QLCDNumber *display =  new QLCDNumber(4, interface);
+    display->setDecMode();
+    display->setSmallDecimalPoint(true);
+    display->show();
+    display->setObjectName("widgetTemperatureDisplay");
+    display->display(42.42);
+
+    QSizePolicy policy(QSizePolicy::Preferred, QSizePolicy::Preferred);
+    display->setSizePolicy(policy);
+
+    QVBoxLayout *layout = new QVBoxLayout(interface);
+    layout->addWidget(nameLabel);
+    layout->addWidget(display);
+}
+
+void MainWindow::createText(QWidget *interface, QString name, QString topic)
+{
+    QLabel *nameLabel = new QLabel(name, interface, Qt::Widget);
+    nameLabel->setAlignment(Qt::AlignHCenter);
+    nameLabel->setText(name);
+
+    QScrollArea *scroll = new QScrollArea(interface);
+    scroll->autoFillBackground();
+    scroll->setObjectName("widgetTextScrollArea");
+
+    QSizePolicy policy(QSizePolicy::Preferred, QSizePolicy::Preferred);
+    scroll->setSizePolicy(policy);
+
+    QPushButton * button = new QPushButton("Send", interface);
+    button->show();
+    button->setObjectName("widgetTextButton");
+    connect(button, &QPushButton::clicked, this, &MainWindow::on_widgetTextButton_clicked);
+
+    QLineEdit *text = new QLineEdit(interface);
+    text->setObjectName("widgetTextAddText");
+
+    QGridLayout *layout = new QGridLayout(interface);
+    layout->addWidget(nameLabel, 1, 1, 1, 2, Qt::AlignHCenter);
+    layout->addWidget(scroll, 2, 1, 1, 2, Qt::AlignHCenter);
+    layout->addWidget(text, 3, 1, 1, 1, Qt::AlignLeft);
+    layout->addWidget(button, 3, 2, 1, 1, Qt::AlignRight);
+}
+
+QWidget *MainWindow::getWidgetPtr(int index)
+{
+    switch(index)
     {
         case 1:
             return ui->widget_1;

@@ -389,7 +389,12 @@
              </item>
              <item>
               <property name="text">
-               <string>Temperature</string>
+               <string>Display</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>Text</string>
               </property>
              </item>
             </widget>
