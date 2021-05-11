@@ -45,12 +45,16 @@ public:
 class MqttHandler
 {
 public:
-    MqttHandler(QString address, QString port, MainWindow *mainWindow);
+    MqttHandler(QString address, QString port, QString clientId, MainWindow *mainWindow);
     void publishMessage(QString topic, std::string message);
+    QString getAddress();
+    QString getPort();
 private:
     mqtt::async_client client;
     mqtt::connect_options connOpts;
     callback cb;
+    QString address;
+    QString port;
 };
 
 #endif // MQTTHANDLER_H
