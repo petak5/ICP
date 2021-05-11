@@ -2,6 +2,7 @@
  * @file mainwindow.cpp
  * @brief Source file of main window class
  * @author Peter Urgoš (xurgos00)
+ * @author Adam Kľučiar (xkluci01)
  * @date 9.5.2021
  */
 
@@ -589,7 +590,9 @@ void MainWindow::on_exportButton_clicked()
     }
 }
 
-//TO DO: subsribe to topic if not subscribed
+/**
+ * @brief Adds dashboard widget with user defined name topic and type
+ */
 void MainWindow::on_widgetAddButton_clicked()
 {
     auto widgetName = ui->widgetNameText->text().trimmed();
@@ -669,7 +672,9 @@ void MainWindow::on_widgetAddButton_clicked()
     }
 }
 
-
+/**
+ * @brief Removes dashboard widget defined in comboBox
+ */
 void MainWindow::on_widgetRemoveButton_clicked()
 {
     if(ui->widgetRemoveBox->count() == 0 || ui->widgetRemoveBox->currentText().trimmed() == "")
@@ -704,11 +709,14 @@ void MainWindow::on_widgetRemoveButton_clicked()
     ui->widgetRemoveBox->removeItem(ui->widgetRemoveBox->currentIndex());
 }
 
+/**
+ * @brief sends message to MQTT broker containing the opposite state of switch widget
+ */
 void MainWindow::on_widgetSwitchButton_clicked()
 {
     QPushButton *button = qobject_cast<QPushButton *>(sender());
     QWidget *interface = button->parentWidget();
-    QString topic = interface->objectName();
+    QString topic = (interface->findChild<QLayout *>(QString(), Qt::FindDirectChildrenOnly))->objectName();
 
     QLabel *stateLabel = interface->findChild<QLabel *>("widgetSwitchStatusText");
     QString state = stateLabel->text().trimmed();
@@ -726,11 +734,14 @@ void MainWindow::on_widgetSwitchButton_clicked()
     mqttHandler->publishMessage(topic, newState.toStdString());
 }
 
+/**
+ * @brief Sends message to MQTT broker contained in text field after signal from button
+ */
 void MainWindow::on_widgetTextButton_clicked()
 {
     QPushButton *button = qobject_cast<QPushButton *>(sender());
     QWidget *interface = button->parentWidget();
-    QString topic = interface->objectName();
+    QString topic = (interface->findChild<QLayout *>(QString(), Qt::FindDirectChildrenOnly))->objectName();
 
     QLineEdit *lineEdit = interface->findChild<QLineEdit *>("widgetTextAddText");
     QString text = lineEdit->text().trimmed();
@@ -749,6 +760,10 @@ void MainWindow::on_widgetTextButton_clicked()
     mqttHandler->publishMessage(topic, text.toStdString());
 }
 
+/**
+ * @brief Forwards msg to all dashboard widgets with the same topic
+ * @param msg message received from MQTT broker
+ */
 void MainWindow::messageHandler(mqtt::const_message_ptr msg)
 {
     auto topic = QString().fromStdString(msg->get_topic());
@@ -790,6 +805,11 @@ void MainWindow::messageHandler(mqtt::const_message_ptr msg)
 
 }
 
+/**
+ * @brief Returns pointer to dashboard widget container depeding on index
+ * @param index index of widget container
+ * @return pointer to widget container
+ */
 QWidget *MainWindow::getWidgetPtr(int index)
 {
     switch(index)
@@ -823,6 +843,12 @@ QWidget *MainWindow::getWidgetPtr(int index)
     return nullptr;
 }
 
+/**
+ * @brief Creates dashboard widget for displaying switch state in interface
+ * @param interface pointer to widget container
+ * @param name name of dashboard widget
+ * @param topic topic that is received by widget
+ */
 void MainWindow::createSwitch(QWidget* interface, QString name, QString topic)
 {
     QLabel *nameLabel = new QLabel(name);
@@ -858,6 +884,12 @@ void MainWindow::createSwitch(QWidget* interface, QString name, QString topic)
     layout->addWidget(id);
 }
 
+/**
+ * @brief Creates dashboard widget for displaying number value in interface
+ * @param interface pointer to widget container
+ * @param name name of dashboard widget
+ * @param topic topic that is received by widget
+ */
 void MainWindow::createDisplay(QWidget *interface, QString name, QString topic)
 {
     QVBoxLayout *layout = new QVBoxLayout(interface);
@@ -887,6 +919,12 @@ void MainWindow::createDisplay(QWidget *interface, QString name, QString topic)
     layout->addWidget(id);
 }
 
+/**
+ * @brief Creates dashboard widget for displaying text in interface
+ * @param interface pointer to widget container
+ * @param name name of dashboard widget
+ * @param topic topic that is received by widget
+ */
 void MainWindow::createText(QWidget *interface, QString name, QString topic)
 {
     QLabel *nameLabel = new QLabel(name);
@@ -922,6 +960,11 @@ void MainWindow::createText(QWidget *interface, QString name, QString topic)
     layout->setObjectName(topic);
 }
 
+/**
+ * @brief Changes state of switch depending on received msg
+ * @param msg message receiver from mqtt broker
+ * @param interface pointer to widget container
+ */
 void MainWindow::messageSwitchHandler(mqtt::const_message_ptr msg, QWidget *interface)
 {
     auto payload = msg->get_payload();
@@ -930,6 +973,11 @@ void MainWindow::messageSwitchHandler(mqtt::const_message_ptr msg, QWidget *inte
     label->setText(QString().fromStdString(payload));
 }
 
+/**
+ * @brief Displays value from msg to LCDnumber widget
+ * @param msg message receiver from mqtt broker
+ * @param interface pointer to widget container
+ */
 void MainWindow::messageDisplayHandler(mqtt::const_message_ptr msg, QWidget *interface)
 {
     auto payload = msg->get_payload();
@@ -938,6 +986,11 @@ void MainWindow::messageDisplayHandler(mqtt::const_message_ptr msg, QWidget *int
     display->display(QString().fromStdString(payload));
 }
 
+/**
+ * @brief Appends msg payload to text area in widget determined by interface
+ * @param msg message receiver from mqtt broker
+ * @param interface pointer to widget container
+ */
 void MainWindow::messageTextHandler(mqtt::const_message_ptr msg, QWidget *interface)
 {
     auto payload = msg->get_payload();

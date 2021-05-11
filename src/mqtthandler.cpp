@@ -2,6 +2,7 @@
  * @file mqtthandler.cpp
  * @brief Implementation of MQTT handler class
  * @author Peter Urgoš (xurgos00)
+ * @author Adam Kľučiar (xkluci01)
  * @date 9.5.2021
  */
 

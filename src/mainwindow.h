@@ -2,6 +2,7 @@
  * @file mainwindow.h
  * @brief Header file for main window class
  * @author Peter Urgoš (xurgos00)
+ * @author Adam Kľučiar (xkluci01)
  * @date 9.5.2021
  */
 
