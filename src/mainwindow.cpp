@@ -815,6 +815,7 @@ void MainWindow::on_widgetSwitchButton_clicked()
         newState = "OFF";
     }
 
+    stateLabel->setText(newState);
     mqttHandler->publishMessage(topic, newState.toStdString());
 }
 
@@ -829,6 +830,7 @@ void MainWindow::on_widgetTextButton_clicked()
 
     QLineEdit *lineEdit = interface->findChild<QLineEdit *>("widgetTextAddText");
     QString text = lineEdit->text().trimmed();
+    QTextEdit *textBlock = interface->findChild<QTextEdit *>("widgetTextScrollArea");
 
     if(text == "")
     {
@@ -841,6 +843,8 @@ void MainWindow::on_widgetTextButton_clicked()
         return;
     }
 
+    textBlock->append(text);
+    lineEdit->clear();
     mqttHandler->publishMessage(topic, text.toStdString());
 }
 
@@ -988,7 +992,6 @@ void MainWindow::createDisplay(QWidget *interface, QString name, QString topic)
     display->setSmallDecimalPoint(true);
     display->show();
     display->setObjectName("widgetDisplay");
-    display->display(42.42);
 
     QSizePolicy policy(QSizePolicy::Preferred, QSizePolicy::Preferred);
     display->setSizePolicy(policy);
@@ -1053,8 +1056,13 @@ void MainWindow::messageSwitchHandler(mqtt::const_message_ptr msg, QWidget *inte
 {
     auto payload = msg->get_payload();
     QLabel *label = interface->findChild<QLabel *>("widgetSwitchStatusText");
+    QString newState = "OFF";
+    if(payload == "on" || payload == "On" || payload == "ON" || payload == "1")
+    {
+        newState = "ON";
+    }
 
-    label->setText(QString().fromStdString(payload));
+    label->setText(newState);
 }
 
 /**
