@@ -1,6 +1,7 @@
 # File: ICP.pro
 # Brief: MQTT Explorer
 # Author: Peter Urgoš (xurgos00)
+# Author: Adam Kľučiar (xkluci01)
 # Date 9.5.2021
 
 QT       += core gui

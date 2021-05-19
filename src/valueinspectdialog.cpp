@@ -23,10 +23,6 @@ ValueInspectDialog::~ValueInspectDialog()
 }
 
 
-/**
- * @brief Set message to be shown in the dialog, try to parse it as an image too
- * @param message to show
- */
 void ValueInspectDialog::setMessage(std::string message)
 {
     ui->plainTextEdit->setPlainText(QString::fromStdString(message));
