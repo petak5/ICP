@@ -678,16 +678,24 @@ void MainWindow::on_widgetRemoveButton_clicked()
 
     QWidget *interface;
     QString name;
+    QLabel *label;
     for(int i=1; i<= 12; i++)
     {
         interface = getWidgetPtr(i);
-        name = (interface->findChild<QLabel *>("widgetNameLabel"))->text().trimmed();
+        label =interface->findChild<QLabel *>("widgetNameLabel");
+
+        if(label == nullptr)
+        {
+            continue;
+        }
+
+        name = label->text().trimmed();
         if(name == ui->widgetRemoveBox->currentText())
         {
             break;
         }
     }
-    //doesnt remove layout, needs fix
+
     QLayout *layout = interface->findChild<QLayout *>(QString(), Qt::FindDirectChildrenOnly);
     qDeleteAll(layout->findChildren<QWidget *>(QString(), Qt::FindDirectChildrenOnly));
     delete layout;
