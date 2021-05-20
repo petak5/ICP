@@ -738,7 +738,6 @@ void MainWindow::on_widgetTextButton_clicked()
 
     QLineEdit *lineEdit = interface->findChild<QLineEdit *>("widgetTextAddText");
     QString text = lineEdit->text().trimmed();
-    QTextEdit *textBlock = interface->findChild<QTextEdit *>("widgetTextScrollArea");
 
     if(text == "")
     {
@@ -751,7 +750,6 @@ void MainWindow::on_widgetTextButton_clicked()
         return;
     }
 
-    textBlock->append(text);
     lineEdit->clear();
     mqttHandler->publishMessage(topic, text.toStdString());
 }
