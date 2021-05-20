@@ -925,7 +925,7 @@ void MainWindow::createText(QWidget *interface, QString name, QString topic)
     QLineEdit *text = new QLineEdit();
     text->setObjectName("widgetTextAddText");
 
-    QLabel *id = new QLabel("switch");
+    QLabel *id = new QLabel("text");
     id->setVisible(false);
     id->setObjectName("widgetID");
 
