@@ -761,15 +761,15 @@ void MainWindow::messageHandler(mqtt::const_message_ptr msg)
 {
     auto topic = QString().fromStdString(msg->get_topic());
     std::vector<QWidget *> interfaces;
-    QWidget *widget;
+    QLayout *widget;
     QLabel *label;
 
     for(int i=1; i <= 12 ; i++)
     {
-        widget = getWidgetPtr(i)->findChild<QWidget *>(topic, Qt::FindDirectChildrenOnly);
+        widget = getWidgetPtr(i)->findChild<QLayout *>(topic, Qt::FindDirectChildrenOnly);
         if(widget != nullptr)
         {
-            interfaces.push_back(widget);
+            interfaces.push_back(getWidgetPtr(i));
         }
     }
 
@@ -780,7 +780,12 @@ void MainWindow::messageHandler(mqtt::const_message_ptr msg)
 
     for(auto tmp : interfaces)
     {
-        label = tmp->findChild<QLabel *>("widgetID", Qt::FindDirectChildrenOnly);
+        label = tmp->findChild<QLabel *>("widgetID");
+
+        if(label == nullptr)
+        {
+            continue;
+        }
 
         if(label->text() == "switch")
         {
@@ -944,7 +949,10 @@ void MainWindow::messageSwitchHandler(mqtt::const_message_ptr msg, QWidget *inte
         newState = "ON";
     }
 
-    label->setText(newState);
+    if(label != nullptr)
+    {
+        label->setText(newState);
+    }
 }
 
 
@@ -953,7 +961,10 @@ void MainWindow::messageDisplayHandler(mqtt::const_message_ptr msg, QWidget *int
     auto payload = msg->get_payload();
     QLCDNumber* display = interface->findChild<QLCDNumber *>("widgetDisplay");
 
-    display->display(QString().fromStdString(payload));
+    if(display != nullptr)
+    {
+            display->display(QString().fromStdString(payload));
+    }
 }
 
 
@@ -962,7 +973,10 @@ void MainWindow::messageTextHandler(mqtt::const_message_ptr msg, QWidget *interf
     auto payload = msg->get_payload();
     QTextEdit *text = interface->findChild<QTextEdit *>("widgetTextScrollArea");
 
-    text->append(QString().fromStdString(payload));
+    if(text != nullptr)
+    {
+        text->append(QString().fromStdString(payload));
+    }
 }
 
 
